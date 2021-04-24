@@ -9,6 +9,16 @@
         "prod": "npm run production",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.2",
+        "@ttskch/select2-bootstrap4-theme": "^1.5.2",
+        "izitoast": "^1.4.0",
+        "select2": "^4.0.13",
+        "vform": "^1.0.1",
+        "vue-input-tag": "^2.0.7",
+        "vue-progressbar": "^0.7.5",
+        "vue2-dropzone": "^3.6.0"
+    },
     "devDependencies": {
         "axios": "^0.19.2",
         "bootstrap": "^4.4.1",

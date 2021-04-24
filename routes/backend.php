@@ -1,15 +1,17 @@
 <?php
 
-use App\Http\Controllers\Backend\BackupController;
-use App\Http\Controllers\Backend\DashboardController;
-use App\Http\Controllers\Backend\MenuBuilderController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\ProductController;
+use App\Http\Controllers\Backend\VariantController;
 use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\PageController;
-use App\Http\Controllers\Backend\ProfileController;
 use App\Http\Controllers\Backend\RoleController;
-use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\BackupController;
+use App\Http\Controllers\Backend\ProfileController;
+use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\MenuBuilderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +24,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
+
+
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+//Product Section
+
+Route::middleware('auth')->group(function () {
+    Route::resource('product-variant',VariantController::class);
+    Route::resource('product', ProductController::class);
+    Route::post('search-product', [ProductController::class,'search'])->name('product.search');
+    Route::post('uploadImage/{id?}', [ProductController::class,'uploadImage'])->name('uploadimg');
+});
+
+
 
 // Roles and Users
 Route::resource('roles', RoleController::class)->except(['show']);
