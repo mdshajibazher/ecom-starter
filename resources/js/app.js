@@ -2,7 +2,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 /*v-form*/
-import { Form, HasError, AlertError } from 'vform'
+import { HasError, AlertError } from 'vform'
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
 
@@ -18,6 +18,8 @@ Vue.use(VueProgressBar, {
 
 import CreateProduct from './components/CreateProduct';
 Vue.component('create-product',CreateProduct);
+Vue.component('ProductCollections', require('./components/ProductCollections').default);
+Vue.component('vue-modal', () => import('./components/modal/VueModal'));
 
 const app = new Vue({
     el: '#app',

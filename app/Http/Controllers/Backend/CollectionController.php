@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
-use App\Models\Subcategory;
+use App\Models\Label;
+use App\Models\Collection;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class SubcategoryController extends Controller
+class CollectionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +16,8 @@ class SubcategoryController extends Controller
      */
     public function index()
     {
-        //
+        $collections =  Collection::all();
+        return view('backend.collections.index',compact('collections'));
     }
 
     /**
@@ -25,7 +27,8 @@ class SubcategoryController extends Controller
      */
     public function create()
     {
-        //
+        $groupLabels = Label::all(); 
+        return view('backend.collections.create',compact('groupLabels'));
     }
 
     /**
@@ -42,10 +45,10 @@ class SubcategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Subcategory  $subcategory
+     * @param  \App\Models\Collection  $collection
      * @return \Illuminate\Http\Response
      */
-    public function show(Subcategory $subcategory)
+    public function show(Collection $collection)
     {
         //
     }
@@ -53,10 +56,10 @@ class SubcategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Subcategory  $subcategory
+     * @param  \App\Models\Collection  $collection
      * @return \Illuminate\Http\Response
      */
-    public function edit(Subcategory $subcategory)
+    public function edit(Collection $collection)
     {
         //
     }
@@ -65,10 +68,10 @@ class SubcategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Subcategory  $subcategory
+     * @param  \App\Models\Collection  $collection
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Subcategory $subcategory)
+    public function update(Request $request, Collection $collection)
     {
         //
     }
@@ -76,10 +79,10 @@ class SubcategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Subcategory  $subcategory
+     * @param  \App\Models\Collection  $collection
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Subcategory $subcategory)
+    public function destroy(Collection $collection)
     {
         //
     }
