@@ -20,6 +20,10 @@ import CreateProduct from './components/CreateProduct';
 Vue.component('create-product',CreateProduct);
 Vue.component('ProductCollections', require('./components/ProductCollections').default);
 Vue.component('vue-modal', () => import('./components/modal/VueModal'));
+Vue.component('pagination', require('laravel-vue-pagination'));
+
+
+
 
 const app = new Vue({
     el: '#app',

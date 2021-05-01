@@ -17,7 +17,7 @@
 </head>
 <body>
 <div id="app" class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-    <slot name="modal"></slot>
+
    
     @include('layouts.backend.partials.header')
     <div class="app-main">
@@ -31,6 +31,7 @@
     </div>
     <!-- set progressbar -->
     <vue-progress-bar></vue-progress-bar>
+
 </div>
 <!-- Scripts -->
 

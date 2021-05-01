@@ -5,6 +5,7 @@ use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\PageController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\LabelController;
 use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\ProfileController;
@@ -35,8 +36,12 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 
 Route::resource('product-variant',VariantController::class);
-Route::resource('subcollections',SubcollectionController::class);
-Route::resource('collections',CollectionController::class);
+Route::resource('subcollections',SubcollectionController::class)->except(['create','edit']);;
+Route::resource('labels',LabelController::class)->except(['create','edit']);;
+Route::resource('collections',CollectionController::class)->except(['create','edit']);
+Route::get('getcollections',[CollectionController::class,'getCollection']);
+
+Route::get('/collections/{query_field}/{query}', [CollectionController::class,'search']);
 Route::resource('product', ProductController::class);
 Route::post('search-product', [ProductController::class,'search'])->name('product.search');
 Route::post('uploadImage/{id?}', [ProductController::class,'uploadImage'])->name('uploadimg');

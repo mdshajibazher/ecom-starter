@@ -10,7 +10,7 @@
                 </slot>
               </div>
 
-              <div class="modal-footer">
+              <div class="modal-footer" style="background: #fff">
                 <slot name="footer">
                   default footer
                   <button class="btn btn-success" @click="$emit('close')">

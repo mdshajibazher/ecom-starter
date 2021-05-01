@@ -1,45 +1,125 @@
 <template>
     <div>
-<vue-modal v-if="showModal" @close="showModal = false">
+
+        <vue-modal v-if="showModal" @close="showModal = false">
         <div slot="body">
 
-            <form @keydown="sub_collection_form.onKeydown($event)">
-                <div class="form-group">
-                    <label for="title">Subcollection Title</label>
-                    <input type="text" :class="{ 'is-invalid': sub_collection_form.errors.has('title') }" class="form-control"  placeholder="Enter Subcollection Title" v-model="sub_collection_form.title">
+        <form @keydown="sub_collection_form.onKeydown($event)">
+            <div class="form-group">
+                <label for="title">Subcollection Title</label>
+                <input type="text" :class="{ 'is-invalid': sub_collection_form.errors.has('title') }" class="form-control"  placeholder="Enter Subcollection Title" v-model="sub_collection_form.title">
 
-                     <has-error :form="sub_collection_form" field="title"></has-error>
-                </div>
-            </form>
+                    <has-error :form="sub_collection_form" field="title"></has-error>
+            </div>
+        </form>
         </div>
         <div slot="footer">
-            
-            <button class="btn btn-danger" @click="showModal = false">
-                    x 
-            </button>
-            <button :disabled="sub_collection_form.busy" @click="addSubCollection()" type="button" class="btn btn-primary">Submit</button>
+
+        <button class="btn btn-danger" @click="showModal = false">
+                x 
+        </button>
+        <button :disabled="sub_collection_form.busy" @click="storeSubCollection()" type="button" class="btn btn-primary">Submit</button>
         </div>
-</vue-modal>
+        </vue-modal>
+
+
+
+
+
+     <div class="app-page-title">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="page-title-icon">
+                    <i class="pe-7s-news-paper icon-gradient bg-mean-fruit">
+                    </i>
+                </div>
+                <div>All collections</div>
+            </div>
+            <div class="page-title-actions">
+                <div class="d-inline-block dropdown">
+                    <button @click.prevent="addCollection"  type="button" class="btn-shadow btn btn-info">
+                        <span class="btn-icon-wrapper pr-2 opacity-7">
+                            <i class="fas fa-plus-circle fa-w-20"></i>
+                        </span>
+                        Create Collection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
             <div class="row" @keydown="errorFree()">
-                
-                <div class="col-md-12">
-                    <div class="card shadow mb-4">
+            <div class="col-md-6">
+                       
+            <div class="main-card mb-3 card p-3">
+                <div class="card mb-3">
+                    <div class="card-header d-flex justify-content-between">
+                         <select v-model="pagnate_per_page" class="form-control" style="width: 80px;height: 35px;" @change="PerPageData">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        <input type="text" class="form-control " placeholder="search" style="width: 200px;height: 35px" v-model="query">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table  class="table table-striped table-hover table-bordered" v-if="total_data > 0">
+                        <thead>
+                        <tr>
+                            <th @click="sort('id')" class="text-center" style="cursor: pointer"># <span v-html="getsortIcon(orderByDir)"></span> </th>
+                            <th @click="sort('title')" style="cursor: pointer">Title <span v-html="getsortIcon(orderByDir)"></span></th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr v-for="(collection,index) in pd_collections.data" :key="collection.id">
+                                <td>{{pd_collections.from+index}}</td>
+                                <td>{{collection.title}}</td>
+                                <td><button @click="editCollection(collection)" type="button" class="btn btn-primary"><i class="fas fa-edit"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                     <p v-else class="alert alert-danger">Sorry No Data Dound </p>
+                     <div class="d-flex justify-content-between">
+                            
+                    <small>   Showing {{from}} to {{to}} of {{total_data}} entries </small>
+                     
+                    <pagination  :limit="2" :data="pd_collections" v-if="query === ''" @pagination-change-page="getData"></pagination>
+
+                    <pagination  :limit="2" :data="pd_collections" v-else @pagination-change-page="searchData"></pagination>
+                    </div>
+                </div>
+               
+            </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow mb-4 position-relative" v-if="formShow">
+                        <div class="cross_button"> <i class="fas fa-times"></i></div>
                         <div class="card-body">
-                            <div class="form-group">
-                                <validation-errors :errors="validationErrors" v-if="validationErrors"></validation-errors>
-                            </div>
+                            <p v-if="editMode" class="alert  alert-warning"><b>Warning: </b> You are now editing "{{collection_form.title}}" </p>
+                            <form @submit.prevent="editMode ? updateCollection() : saveCollection()" @keydown="collection_form.onKeydown($event)">
                             <div class="form-group">
                                 <label for="title">Collection Title</label>
-                                <input type="text"  :class="{ 'is-invalid': validationErrors.title }" v-model="title" placeholder="Category Title"  class="form-control">
-                                <p class="text-danger" v-if="validationErrors.title">{{validationErrors.title[0]}}</p>
+                                <input type="text" :class="{ 'is-invalid': collection_form.errors.has('title') }"  v-model="collection_form.title" placeholder="Enter Collection Title"  class="form-control">
+
+                                  <has-error :form="collection_form" field="title"></has-error>
+                               
                             </div>
                             <div class="row">
                                 <div class="col-md-9">
                                      <div class="form-group">
                                         <label for="sub_collection">Select Some Subcollection</label>
-                                        <multiselect v-model="sub_collection" :options="sub_collection_options"></multiselect>
+                                        <multiselect :close-on-select="false" track-by="id" :class="{ 'is-invalid': collection_form.errors.has('sub_collection') }" label="title" :multiple="true" v-model="collection_form.sub_collection" :options="sub_collection_options"></multiselect>
+                                        
+                                        <small class="text-danger" v-if="collection_form.errors.has('sub_collection')">{{collection_form.errors.get('sub_collection')}}</small>
+                                       
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-3">
@@ -50,36 +130,77 @@
                                 </div>
                             </div>
 
-  
-    
+                              <button type="submit" class="btn btn-lg btn-primary"><span v-if="editMode">Update</span> <span v-else>Save</span></button>
+                            </form>
                         </div>
                     </div>
 
                 </div>
 
             </div>
-
-            <button @click="saveCollection" type="submit" class="btn btn-lg btn-primary"><span v-if="editMode">Update</span> <span v-else>Save</span></button>
-           
     </div>
 </template>
 
 <script>
 
 import Form from 'vform';
-import ValidationErrors from './error/ValidationErrors';
 import Multiselect from 'vue-multiselect';
 export default {
+    created() {
+        this.sub_collection_options = this.subcollections;
+        this.pd_collections = this.collections;
+        this.from = this.collections.from;
+        this.to = this.collections.to;
+        this.total_data = this.collections.total;
+    },
+    data() {
+        return {
+            formShow: false,
+            editMode: false,
+            query: "",
+            queryField:"title",
+            pd_collections: [],
+            sub_collection: [],
+            sub_collection_options: [],
+            showModal: false,
+            from: 0,
+            to: 0,
+            total_data: 0,
+            pagnate_per_page: 10,
+            orderBy:'id',
+            orderByDir:'desc',
+            collection_form: new Form({
+                id: '',
+                title: '',
+                sub_collection: '',
+            }),
+            sub_collection_form: new Form({
+                id: '',
+                title: '',
+            })
+        }
+    },
+
+    watch:{
+        query: function (newQ,oldQ){
+            if (newQ === "") {
+                this.getData();
+            } else {
+                this.searchData();
+            }
+        }
+    },
     components: {
-        ValidationErrors,
         Multiselect
     },
     props: {
-        editMode: {
-            type: Boolean,
-            default:false
-        },
         labels: {
+            type: Array,
+        },
+        collections: {
+            type: Object,
+        },
+        subcollections:{
             type: Array,
         },
         image: {
@@ -87,25 +208,52 @@ export default {
         },
 
     },
-    data() {
-        return {
-            title: '',
-            validationErrors: '',
-            sub_collection: [],
-            sub_collection_options: [],
-            showModal: false,
 
-            sub_collection_form: new Form({
-                title: '',
-            })
-        }
-    },
     methods: {
-        errorFree(){
-            this.validationErrors = '';
+
+        getData(page=1){
+            this.$Progress.start();
+            axios.get('/app/getcollections/?page='+page+'&per_page='+this.pagnate_per_page+'&orderBy='+this.orderBy+'&orderByDir='+this.orderByDir)
+                .then(res => {
+                    console.log(res);
+                    this.pd_collections = res.data;
+                    this.total_data = res.data.total;
+                    this.from = res.data.from;
+                    this.to = res.data.to;
+                    this.$Progress.finish()
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.$Progress.fail()
+                })
         },
 
-        addSubCollection(){
+        searchData(page=1){
+            this.$Progress.start();
+            axios.get('/app/collections/'+this.queryField+'/'+this.query+'/?page='+page+'&per_page='+this.pagnate_per_page+'&orderBy='+this.orderBy+'&orderByDir='+this.orderByDir)
+                .then(res => {
+                    console.log(res);
+                    this.pd_collections = res.data;
+                    this.total_data = res.data.total;
+                    this.from = res.data.from;
+                    this.to = res.data.to;
+                    this.$Progress.finish()
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.$Progress.fail()
+                })
+        },
+
+        PerPageData(){
+            if(this.query === ''){
+                this.getData()
+            }else{
+                this.searchData()
+            }
+            console.log(this.pagnate_per_page);
+        },
+        storeSubCollection(){
         this.$Progress.start();
         this.sub_collection_form.busy = true;
          this.sub_collection_form.post('/app/subcollections')
@@ -126,68 +274,120 @@ export default {
          })
 
         },
-        // store product into database
+        // store Collection into database
         saveCollection() {
-            this.$Progress.start();
-            this.validationErrors = '';
+            this.$Progress.start()
+            this.collection_form.busy = true
+            this.collection_form.post('/app/collections')
+             .then(response => {
+                    this.$Progress.finish();
+                    this.collection_form.reset();
+                    this.collection_form.clear();
+                    // this.form.fill(role)
+                    iziToast.success({
+                        title: 'Success',
+                        position: 'topRight',
+                        message: response.data.title +'Saved Successfully',
+                    });
+                this.getData();
+                this.formShow = false;
 
+                })
+                .catch(e => {
+                    console.log(e)
+                    iziToast.error({
+                            title: 'Error',
+                            position: 'topRight',
+                            message: e.response.data.message,
+                    });
+                    this.$Progress.fail()
+                })
+        
 
-            if(this.editMode){
-                // axios.put('/app/product/'+this.products.id, product).then(response => {
-                //    this.successMsg("Record updated successfully");
-                //    this.$Progress.finish();
-                //    window.location = '/app/product';
-                // }).catch((error )=> {
-                //     let errors=error.response.data.errors;
-                //     if (error.response.status == 422){
-                //     this.validationErrors = error.response.data.errors;
-                //     }
-                //     this.errorMsg(errors);
-                //     this.$Progress.fail();
-                // })
+        },
 
+        addCollection(data){
+            this.formShow = true;
+            this.editMode = false;
+            this.collection_form.reset();
+            this.collection_form.clear();
+        },
+        editCollection(data){
+            this.formShow = true;
+            this.editMode = true;
+            this.collection_form.id = data.id;
+            this.collection_form.title = data.title;
+            this.collection_form.sub_collection = data.subcollections;
+
+        },
+                // store product into database
+        updateCollection() {
+            this.$Progress.start()
+            this.collection_form.busy = true
+            this.collection_form.put('/app/collections/'+this.collection_form.id)
+             .then(response => {
+                    this.$Progress.finish();
+                    this.collection_form.reset();
+                    this.collection_form.clear();
+                    // this.form.fill(role)
+                    iziToast.success({
+                        title: 'Success',
+                        position: 'topRight',
+                        message: response.data.title +'Saved Successfully',
+                    });
+                this.getData();
+
+                this.formShow = false;
+
+                })
+                .catch(e => {
+                    console.log(e)
+                    iziToast.error({
+                            title: 'Error',
+                            position: 'topRight',
+                            message: e.response.data.message,
+                    });
+                    this.$Progress.fail()
+                })
+        },
+        // this function sort the whole by column name ascending or descending
+        sort(argument){
+            this.orderBy = argument;
+            this.orderByDir == 'desc' ?  this.orderByDir = 'asc' : this.orderByDir = 'desc';
+            if(this.query === ''){
+                this.getData()
             }else{
-                // axios.post('/app/product', product).then(response => {
-                //         this.successMsg("Record created successfully");
-                //         this.$Progress.finish();
-                //         window.location = '/app/product';
-                // }).catch((error) => {
-                //     let errors=error.response.data.errors;
-                //     if (error.response.status == 422){
-                //     this.validationErrors = error.response.data.errors;
-                //     }
-                //     this.errorMsg(errors);
-                //     this.$Progress.fail();
-                // })
+                this.searchData()
             }
-
-            
         },
-        successMsg(msg){
-            iziToast.success({
-                title: 'Success',
-                position: 'topRight',
-                message: msg,
-            });
+        getsortIcon(orderByDir){
+            if(orderByDir == 'asc'){
+                return '<i class="fas  fa-sort-alpha-up"></i>';
+            }else{
+                return '<i class="fas  fa-sort-alpha-down-alt"></i>';
+            }
         },
-        errorMsg(msg){
-            $.each(msg,function(index,value) {
-                iziToast.error({
-                    title: 'Error',
-                    position: 'topRight',
-                    message: value,
-                });
-            })
-        }
 
 
-    },
-    created() {
-
-    },
-    mounted() {
 
     }
 }
 </script>
 
+
+<style scoped>
+.multiselect.is-invalid{
+    border: 1px solid red;
+    border-radius: 5px;
+}
+.cross_button{
+    position: absolute;
+    right: 29px;
+    top: 11px;
+}
+.cross_button i{
+    font-size: 23px;
+    color: #747d8c;
+    cursor: pointer;
+}
+</style>

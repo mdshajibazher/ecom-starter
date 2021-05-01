@@ -16,7 +16,8 @@ class SubcollectionController extends Controller
      */
     public function index()
     {
-        //
+        $subcollections = Subcollection::all();
+        return view('backend.subcollections.index',compact('subcollections'));
     }
 
     /**

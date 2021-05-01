@@ -5,7 +5,7 @@
         <h1 class="h3 mb-0 text-gray-800">Edit Product</h1>
     </div>
     <div id="app">
-        <create-product :variants="{{ $variants }}" :products="{{ $product }}" :prices="{{ $prices }}" :image="{{$images}}" :Mode="true">Loading</create-product>
+        <create-product :variants="{{ json_encode($variants) }}" :products="{{ json_encode($product) }}" :prices="{{ $prices }}" :image="{{$images}}" :Mode="true">Loading</create-product>
         <!-- set progressbar -->
         <vue-progress-bar></vue-progress-bar>
     </div>
