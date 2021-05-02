@@ -28,7 +28,7 @@ class ProductController extends Controller
     public function index()
     {
         $variants = Variant::all();
-        $products=Product::with('prices.variant_one','prices.variant_two','prices.variant_three')->paginate(1);
+        $products=Product::with('prices.variant_one','prices.variant_two','prices.variant_three')->paginate(10);
         return view('backend.products.index',compact('products','variants'));
     }
 
@@ -56,12 +56,14 @@ class ProductController extends Controller
 
         DB::beginTransaction();
         try {
-            $product_id=Product::create([
+            $product=Product::create([
                 'title'=>$request['title'],
                 'sku'=>$request['sku'],
                 'description'=>$request['description']
-            ])->id;
+            ]);
 
+            $product_id = $product->id;
+    
             $imagepath=$this->uploadImage($request);
             foreach ($imagepath as $key => $value) {
                 ProductImage::create([
@@ -71,6 +73,7 @@ class ProductController extends Controller
             }
             $product_variant_ids=$this->insertProductVariant($request,$product_id);
             $this->insertProductVariantPrices($request,$product_variant_ids,$product_id);
+            $this->AttachSubcollection($request, $product);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -88,27 +91,15 @@ class ProductController extends Controller
      * @param \App\Models\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function search(Request $product)
+    public function search($query_field,$query,Request $request)
     {
-        $this->validate($product, [
-            'title' => 'bail|required|string|max:100',
-            'price_from' => 'required|numeric',
-            'price_to' => 'required|numeric',
-        ]);
-        $title=$product->title;
-        $from=$product->price_from;
-        $to=$product->price_to;
-
-        $products=Product::where([['title', 'LIKE', "%{$title}%"]])
-        ->with(['prices'=>function($query) use($from, $to)
-        {
-            return $query->with('variant_one','variant_two','variant_three')->whereBetween('price',[$from,$to]);
-        }])
-        ->paginate(3);
-
-        $variants = Variant::all();
-        return view('backend.products.index',compact('products','variants'));
+        //if request has per_page then ok otherwise set static value 10;
+        $paginate_perpage = $request->per_page ? $request->per_page : 10;
+        $orderBy = $request->orderBy ? $request->orderBy : 'id';
+        $orderByDir = $request->orderByDir ? $request->orderByDir : 'desc';
+        return Product::with('prices.variant_one','prices.variant_two','prices.variant_three')->where($query_field,'LIKE',"%$query%")->orderBy($orderBy,$orderByDir)->paginate($paginate_perpage);
     }
+
     public function show($product)
     {
        
@@ -120,14 +111,16 @@ class ProductController extends Controller
      * @param \App\Models\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
+        $product = Product::with('Subcollections')->findOrFail($id);
         $data['variants'] = Variant::all();
         $data['product']=$product;
         $data['product']['product_variants']=ProductVariant::where('product_id',$product->id)->get()->groupBy('variant_id');
         $data['prices']=$product->load('prices.variant_one','prices.variant_two','prices.variant_three');
         $data['images']=$product->load('images');
-
+        $data['subcollections']=Subcollection::all();
+   
         return view('backend.products.edit', $data);
     }
 
@@ -172,6 +165,7 @@ class ProductController extends Controller
 
             $product->prices()->delete();
             $this->insertProductVariantPrices($request,$product_variant_ids,$product_id);
+            $this->SyncSubcollection($request,$product);
 
             DB::commit();
         } catch (\Exception $e) {
@@ -190,5 +184,12 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+
+    public function getProducts(Request $request){
+        $paginate_perpage = $request->per_page ? $request->per_page : 10;
+        $orderBy = $request->orderBy ? $request->orderBy : 'id';
+        $orderByDir = $request->orderByDir ? $request->orderByDir : 'desc';
+        return Product::with('prices.variant_one','prices.variant_two','prices.variant_three')->orderBy($orderBy,$orderByDir)->paginate($paginate_perpage);
     }
 }

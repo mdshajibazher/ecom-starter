@@ -18,6 +18,7 @@ Vue.use(VueProgressBar, {
 
 import CreateProduct from './components/backend/CreateProduct';
 Vue.component('create-product',CreateProduct);
+Vue.component('IndexProduct', require('./components/backend/IndexProduct').default);
 Vue.component('ProductCollections', require('./components/backend/ProductCollections').default);
 Vue.component('ProductSubcollections', require('./components/backend/ProductSubcollections').default);
 Vue.component('SubcollectionLabel', require('./components/backend/SubcollectionLabel').default);

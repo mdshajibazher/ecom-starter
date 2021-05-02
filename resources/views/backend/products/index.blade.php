@@ -1,10 +1,16 @@
-@extends('layouts.backend.app')
+@extends('layouts.backend.vuelayout')
+
+@section('title','collections')
+
+@section('content')
+<index-product :url="{{json_encode(["url" => url('/')])}}" :variants="{{json_encode($variants)}}" :products="{{json_encode($products)}}">Loading </index-product>
+@endsection
 
 
+
+
+{{-- @extends('layouts.backend.app')
 @section('title','Products')
-
-
-
 @section('content')
     <div class="app-page-title">
         <div class="page-title-wrapper">
@@ -139,4 +145,4 @@
         </div>
     </div>
 @endsection
-
+ --}}

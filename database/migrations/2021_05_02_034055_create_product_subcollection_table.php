@@ -17,8 +17,6 @@ class CreateProductSubcollectionTable extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained();
             $table->foreignId('subcollection_id')->constrained();
-            $table->foreignId('collection_id')->constrained();
-            $table->string('collection_title');
         });
     }
 

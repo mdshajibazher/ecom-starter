@@ -50,6 +50,9 @@ Route::get('/getlabels',[LabelController::class,'getLabels']);
 Route::get('/labels/{query_field}/{query}',[LabelController::class,'search']);
 
 Route::resource('product', ProductController::class);
+Route::get('/getproducts',[ProductController::class,'getProducts']);
+Route::get('/products/{query_field}/{query}',[ProductController::class,'search']);
+
 Route::post('search-product', [ProductController::class,'search'])->name('product.search');
 Route::post('uploadImage/{id?}', [ProductController::class,'uploadImage'])->name('uploadimg');
 

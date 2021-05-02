@@ -31,6 +31,6 @@ class Product extends Model
     
 
     public function Subcollections(){
-        return $this->belongsToMany(Subcollections::class)->withPivot('collection_id','collection_name');
+        return $this->belongsToMany(Subcollection::class);
     }
 }

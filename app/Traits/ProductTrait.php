@@ -26,9 +26,31 @@ trait ProductTrait{
 	    $exploed1 = explode(";", $image);
 	    $exploed2 = explode("/", $exploed1[0]);
 	    $filename =  uniqid().'.'.$exploed2[1];
-	    Image::make($image)->resize(215, 215)->save(public_path('images/'.$filename));
+	    // Image::make($image)->resize(440, 586)->save(public_path('images/products/original/'.$filename));
+	    Image::make($image)->resize(440, 586)->save(public_path('images/products/resized/'.$filename));
+	    Image::make($image)->resize(215, 215)->save(public_path('images/products/thumb/'.$filename));
 	    return $filename;
 	}
+
+
+    public function AttachSubcollection($request, $product){
+        $subcol_id = [];
+        foreach($request->sub_collections as $sub){
+         $subcol_id[] = ['product_id'=> $product->id, 'subcollection_id' =>$sub['id']];   
+        }
+
+        $product->Subcollections()->attach($subcol_id);
+    }
+
+
+    public function SyncSubcollection($request, $product){
+        $subcol_id = [];
+        foreach($request->sub_collections as $sub){
+         $subcol_id[] = ['product_id'=> $product->id, 'subcollection_id' =>$sub['id']];   
+        }
+
+        $product->Subcollections()->sync($subcol_id);
+    }
 
     public function insertProductVariant($request,$product_id,$id=null)
     {

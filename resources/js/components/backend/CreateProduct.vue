@@ -102,7 +102,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="variant_price in product_variant_prices">
+                                    <tr v-for="variant_price in product_variant_prices" :key="variant_price.id">
                                         <td>{{ variant_price.title }}</td>
                                         <td>
                                             <input type="text" class="form-control" v-model="variant_price.price">
@@ -119,7 +119,7 @@
                 </div>
             </div>
 
-            <button @click="saveProduct" type="submit" class="btn btn-lg btn-primary"><span v-if="Mode"></div>Update</span> <span v-else>Save</span></button>
+            <button @click="saveProduct" type="submit" class="btn btn-lg btn-primary"><span v-if="Mode">Update</span> <span v-else>Save</span></button>
             <a href="/product" class="btn btn-secondary btn-lg">Cancel</a>
     </section>
 </template>
@@ -138,6 +138,9 @@ export default {
             this.$set(this.dropzoneOptions,'addRemoveLinks',true);
         }
         this.subcollections_options = this.subcollections;
+        if (this.Mode==true) {
+        this.sub_collections = this.products.subcollections;
+        }
     },
     mounted() {
         if (this.Mode==false) {
@@ -206,8 +209,8 @@ export default {
             product_variant_prices: [],
             dropzoneOptions: {
                 url: 'https://httpbin.org/post',
-                thumbnailWidth: 215,
-                maxFilesize: 0.5,
+                // thumbnailWidth: 215,
+                // maxFilesize: 0.5,
                 acceptedFiles: '.jpg, .jpeg, .png .gif',
                 addRemoveLinks: false,
                 dictDefaultMessage: "<i class='fas fa-cloud-upload-alt fa-5x'></i>",
@@ -358,14 +361,15 @@ export default {
                 description: this.description,
                 product_image: this.images,
                 product_variant: this.product_variant,
-                product_variant_prices: this.product_variant_prices
+                product_variant_prices: this.product_variant_prices,
+                sub_collections: this.sub_collections
             }
 
             if(this.Mode){
                 axios.put('/app/product/'+this.products.id, product).then(response => {
                    this.successMsg("Record updated successfully");
                    this.$Progress.finish();
-                   window.location = '/app/product';
+                //    window.location = '/app/product';
                 }).catch((error )=> {
                     let errors=error.response.data.errors;
                     if (error.response.status == 422){
@@ -379,7 +383,7 @@ export default {
                 axios.post('/app/product', product).then(response => {
                         this.successMsg("Record created successfully");
                         this.$Progress.finish();
-                        window.location = '/app/product';
+                        // window.location = '/app/product';
                 }).catch((error) => {
                     let errors=error.response.data.errors;
                     if (error.response.status == 422){
