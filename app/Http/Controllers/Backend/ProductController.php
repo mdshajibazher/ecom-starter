@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
+use DB;
+use Carbon;
+use Session;
+use Validator;
 use App\Models\Product;
+use App\Models\Variant;
+use App\Models\Collection;
+use App\Models\ProductImage;
+use App\Traits\ProductTrait;
+use Illuminate\Http\Request;
+use App\Models\Subcollection;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantPrice;
-use App\Models\Variant;
-use App\Models\ProductImage;
-use Illuminate\Http\Request;
-use App\Traits\ProductTrait;
-use Validator;
-use DB;
-use Session;
-use Carbon;
+use App\Http\Controllers\Controller;
+
 class ProductController extends Controller
 {
     use ProductTrait;
@@ -24,7 +27,6 @@ class ProductController extends Controller
      */
     public function index()
     {
-       
         $variants = Variant::all();
         $products=Product::with('prices.variant_one','prices.variant_two','prices.variant_three')->paginate(1);
         return view('backend.products.index',compact('products','variants'));
@@ -38,7 +40,8 @@ class ProductController extends Controller
     public function create()
     {
         $variants = Variant::all();
-        return view('backend.products.create', compact('variants'));
+        $subcollections = Subcollection::all();
+        return view('backend.products.create', compact('variants','subcollections'));
     }
 
     /**

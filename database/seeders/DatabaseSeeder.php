@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\Collection;
 use App\Models\Subcollection;
 use Illuminate\Database\Seeder;
+use Database\Seeders\CollectionSeeder;
+use Database\Seeders\SubcollectionSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,6 +21,10 @@ class DatabaseSeeder extends Seeder
         // Subcollection::factory(100)->create();
         // $this->call(SettingSeeder::class);
         // $this->call(LabelsSeeder::class);
+
+        // $this->call(CollectionSeeder::class);
+        $this->call(SubcollectionSeeder::class);
+
         // $this->call(PermissionSeeder::class);
         // $this->call(RoleSeeder::class);
         // $this->call(UserSeeder::class);

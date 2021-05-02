@@ -36,18 +36,22 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 
 Route::resource('product-variant',VariantController::class);
-Route::resource('subcollections',SubcollectionController::class)->except(['create','edit']);;
-Route::resource('labels',LabelController::class)->except(['create','edit']);;
+//subcollections 
+Route::resource('subcollections',SubcollectionController::class)->except(['create','edit','show']);
+Route::get('/subcollections/{query_field}/{query}', [SubcollectionController::class,'search']);
+Route::get('getsubcollections',[SubcollectionController::class,'getSubcollections']);
+//collections
 Route::resource('collections',CollectionController::class)->except(['create','edit']);
 Route::get('getcollections',[CollectionController::class,'getCollection']);
-
 Route::get('/collections/{query_field}/{query}', [CollectionController::class,'search']);
+//labels
+Route::resource('labels',LabelController::class)->except(['create','edit','show']);
+Route::get('/getlabels',[LabelController::class,'getLabels']);
+Route::get('/labels/{query_field}/{query}',[LabelController::class,'search']);
+
 Route::resource('product', ProductController::class);
 Route::post('search-product', [ProductController::class,'search'])->name('product.search');
 Route::post('uploadImage/{id?}', [ProductController::class,'uploadImage'])->name('uploadimg');
-
-
-
 
 // Roles and Users
 Route::resource('roles', RoleController::class)->except(['show']);

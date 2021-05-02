@@ -29,4 +29,8 @@ class Product extends Model
         return $this->hasMany(ProductImage::class);
     }
     
+
+    public function Subcollections(){
+        return $this->belongsToMany(Subcollections::class)->withPivot('collection_id','collection_name');
+    }
 }

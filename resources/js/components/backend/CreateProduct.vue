@@ -22,6 +22,15 @@
                                 <textarea v-model="description" :class="{ 'is-invalid': validationErrors.description }"  cols="30" rows="4" class="form-control"></textarea>
                                 <p class="text-danger" v-if="validationErrors.description">{{validationErrors.description[0]}}</p>
                             </div>
+
+                            <div class="form-group">
+                                <label for="sub_collection">Select Subcollections</label>
+                                <multiselect :close-on-select="false" track-by="id" :class="{ 'is-invalid': validationErrors.sub_collections }" label="title" :multiple="true" v-model="sub_collections" :options="subcollections_options"></multiselect>
+                                
+                                <small class="text-danger" v-if="validationErrors.sub_collections">{{validationErrors.sub_collections[0]}}</small>
+                                
+                            </div>
+
                         </div>
                     </div>
 
@@ -48,7 +57,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Variants</h6>
                         </div>
                         <div class="card-body">
-                            <div class="row" v-for="(item,index) in product_variant">
+                            <div class="row" v-for="(item,index) in product_variant" :key="index">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <p class="text-danger" v-if="validationErrors.variant_tag">{{validationErrors.variant_tag[0][0]}}</p>
@@ -56,8 +65,8 @@
 
                                         <label for="">Option</label>
                                         <select v-model="item.option" class="form-control">
-                                            <option v-for="variant in variants"
-                                                    :value="variant.id">
+                                            <option v-for="(variant,index) in variants"
+                                                    :value="variant.id" :key="index">
                                                 {{ variant.title }}
                                             </option>
                                         </select>
@@ -116,40 +125,73 @@
 </template>
 
 <script>
-
+import Multiselect from 'vue-multiselect';
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import InputTag from 'vue-input-tag'
-import ValidationErrors from './error/ValidationErrors';
+import ValidationErrors from '../error/ValidationErrors';
 
 export default {
-    components: {
-        vueDropzone: vue2Dropzone,
-        InputTag,
-        ValidationErrors
-    },
-    props: {
-        Mode: {
-            type: Boolean,
-            default:false
-        },
-        variants: {
-            type: Array,
-            required: true
-        },
-        products: {
-            type: Object,
-        },
-        image: {
-            type: Object,
-        },
-        prices: {
-            type: Object,
+
+    created() {
+        if (this.Mode==false) {
+            this.$set(this.dropzoneOptions,'addRemoveLinks',true);
         }
+        this.subcollections_options = this.subcollections;
     },
+    mounted() {
+        if (this.Mode==false) {
+            this.imageEditMode=false;
+        }
+        if(this.Mode){
+            this.imageEditMode=true;
+            this.product_name=this.products.title;
+            this.product_sku=this.products.sku;
+            this.description=this.products.description;
+            this.product_variant=[];
+            var available_variants=[];
+            var ref=this;
+
+            /*product_variant*/
+            $.each(ref.products.product_variants,function(index,value) {
+                let tag=[];
+                available_variants[index];
+                $.each(value,function(key,variant) {
+                    tag.push(variant.variant);
+                 })
+                ref.product_variant.push({
+                    option: index,
+                    tags: tag
+                })
+            })
+            
+            /*product_prices*/
+            $.each(ref.prices.prices,function(index,value) {
+                let items='';
+                let variant_one=(value.variant_one == null)?'':value.variant_one.variant+'/';
+                let variant_two=value.variant_two == null?'':value.variant_two.variant+'/';
+                let variant_three=value.variant_three == null?'':value.variant_three.variant+'/';
+                items=variant_one+variant_two+variant_three;
+                
+                ref.product_variant_prices.push({
+                    title: items,
+                    price: value.price,
+                    stock: value.stock
+                })
+            })
+            
+            
+            /*images*/
+            $.each(ref.image.images,function(key,value) {
+                ref.images.push(value.file_path);
+            })
+        }
+    } ,
     data() {
         return {
             imageEditMode:false,
+            sub_collections: '',
+            subcollections_options: [],
             product_name: '',
             product_sku: '',
             description: '',
@@ -176,6 +218,38 @@ export default {
             }
         }
     },
+
+
+    components: {
+        vueDropzone: vue2Dropzone,
+        InputTag,
+        ValidationErrors,
+        Multiselect
+    },
+    props: {
+        Mode: {
+            type: Boolean,
+            default:false
+        },
+        variants: {
+            type: Array,
+            required: true
+        },
+        products: {
+            type: Object,
+        },
+        image: {
+            type: Object,
+        },
+        prices: {
+            type: Object,
+        },
+        subcollections:{
+             type: Array,
+        },
+
+    },
+
     methods: {
         // it will push a new object into product variant
         uploadImage(file) {
@@ -185,6 +259,19 @@ export default {
                 title: 'Success',
                 message: "Image upload success",
             });
+        },
+        getSubCollectionbyId(){
+            axios.get('/app/collections/'+this.collection.id)
+            .then( ({data}) => {
+                console.log(data);
+            })
+            .catch( (e) => {
+                  iziToast.error({
+                    title: 'Error',
+                    position: 'topRight',
+                    message: e.response.data.message,
+                });
+            })
         },
         errorFree(){
             this.validationErrors = '';
@@ -323,60 +410,8 @@ export default {
         }
 
 
-    },
-    created() {
-        if (this.Mode==false) {
-            this.$set(this.dropzoneOptions,'addRemoveLinks',true);
-        }
-    },
-    mounted() {
-        if (this.Mode==false) {
-            this.imageEditMode=false;
-        }
-        if(this.Mode){
-            this.imageEditMode=true;
-            this.product_name=this.products.title;
-            this.product_sku=this.products.sku;
-            this.description=this.products.description;
-            this.product_variant=[];
-            var available_variants=[];
-            var ref=this;
-
-            /*product_variant*/
-            $.each(ref.products.product_variants,function(index,value) {
-                let tag=[];
-                available_variants[index];
-                $.each(value,function(key,variant) {
-                    tag.push(variant.variant);
-                 })
-                ref.product_variant.push({
-                    option: index,
-                    tags: tag
-                })
-            })
-            
-            /*product_prices*/
-            $.each(ref.prices.prices,function(index,value) {
-                let items='';
-                let variant_one=(value.variant_one == null)?'':value.variant_one.variant+'/';
-                let variant_two=value.variant_two == null?'':value.variant_two.variant+'/';
-                let variant_three=value.variant_three == null?'':value.variant_three.variant+'/';
-                items=variant_one+variant_two+variant_three;
-                
-                ref.product_variant_prices.push({
-                    title: items,
-                    price: value.price,
-                    stock: value.stock
-                })
-            })
-            
-            
-            /*images*/
-            $.each(ref.image.images,function(key,value) {
-                ref.images.push(value.file_path);
-            })
-        }
     }
+
 }
 </script>
 
@@ -384,4 +419,8 @@ export default {
     .vue-dropzone.is-invalid{
         border-color: red !important;
     }
+    .multiselect.is-invalid{
+    border: 1px solid red;
+    border-radius: 5px;
+}
 </style>

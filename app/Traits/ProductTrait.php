@@ -96,6 +96,7 @@ trait ProductTrait{
             'product_variant_prices.*.stock' => 'required|numeric',
             'product_image' => 'required|array|min:1',
             'product_image.*' => 'required',
+            'sub_collections' => 'required',
           
         ],
         [

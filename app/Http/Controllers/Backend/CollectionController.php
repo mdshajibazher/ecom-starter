@@ -53,17 +53,6 @@ class CollectionController extends Controller
         return $collection;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Collection  $collection
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Collection $collection)
-    {
-        //
-    }
-
 
 
     /**
@@ -92,6 +81,10 @@ class CollectionController extends Controller
         $collection->Subcollections()->sync($subcol_id);
         return $collection;
   
+    }
+
+    public function show($id){
+        return Collection::with('Subcollections')->findOrFail($id);
     }
 
     /**

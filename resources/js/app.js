@@ -16,9 +16,11 @@ Vue.use(VueProgressBar, {
 })
 
 
-import CreateProduct from './components/CreateProduct';
+import CreateProduct from './components/backend/CreateProduct';
 Vue.component('create-product',CreateProduct);
-Vue.component('ProductCollections', require('./components/ProductCollections').default);
+Vue.component('ProductCollections', require('./components/backend/ProductCollections').default);
+Vue.component('ProductSubcollections', require('./components/backend/ProductSubcollections').default);
+Vue.component('SubcollectionLabel', require('./components/backend/SubcollectionLabel').default);
 Vue.component('vue-modal', () => import('./components/modal/VueModal'));
 Vue.component('pagination', require('laravel-vue-pagination'));
 

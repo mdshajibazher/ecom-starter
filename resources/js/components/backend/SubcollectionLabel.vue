@@ -1,31 +1,6 @@
 <template>
     <div>
 
-        <vue-modal v-if="showModal" @close="showModal = false">
-        <div slot="body">
-
-        <form @keydown="sub_collection_form.onKeydown($event)">
-            <div class="form-group">
-                <label for="title">Subcollection Title</label>
-                <input type="text" :class="{ 'is-invalid': sub_collection_form.errors.has('title') }" class="form-control"  placeholder="Enter Subcollection Title" v-model="sub_collection_form.title">
-
-                    <has-error :form="sub_collection_form" field="title"></has-error>
-            </div>
-        </form>
-        </div>
-        <div slot="footer">
-
-        <button class="btn btn-danger" @click="showModal = false">
-                x 
-        </button>
-        <button :disabled="sub_collection_form.busy" @click="storeSubCollection()" type="button" class="btn btn-primary">Submit</button>
-        </div>
-        </vue-modal>
-
-
-
-
-
      <div class="app-page-title">
         <div class="page-title-wrapper">
             <div class="page-title-heading">
@@ -33,15 +8,15 @@
                     <i class="pe-7s-news-paper icon-gradient bg-mean-fruit">
                     </i>
                 </div>
-                <div>All collections</div>
+                <div>All labels</div>
             </div>
             <div class="page-title-actions">
                 <div class="d-inline-block dropdown">
-                    <button @click.prevent="addCollection"  type="button" class="btn-shadow btn btn-info">
+                    <button @click.prevent="addLabel"  type="button" class="btn-shadow btn btn-info">
                         <span class="btn-icon-wrapper pr-2 opacity-7">
                             <i class="fas fa-plus-circle fa-w-20"></i>
                         </span>
-                        Create Collection
+                        Create label
                     </button>
                 </div>
             </div>
@@ -51,7 +26,7 @@
 
 
 
-            <div class="row" @keydown="errorFree()">
+            <div class="row">
             <div class="col-md-6">
                        
             <div class="main-card mb-3 card p-3">
@@ -79,10 +54,10 @@
                         </thead>
 
                         <tbody>
-                            <tr v-for="(collection,index) in pd_collections.data" :key="collection.id">
-                                <td>{{pd_collections.from+index}}</td>
-                                <td>{{collection.title}}</td>
-                                <td><button @click="editCollection(collection)" type="button" class="btn btn-primary"><i class="fas fa-edit"></i></button></td>
+                            <tr v-for="(label,index) in label_collections.data" :key="label.id">
+                                <td>{{label_collections.from+index}}</td>
+                                <td>{{label.title}}</td>
+                                <td><button @click="editLabel(label)" type="button" class="btn btn-primary"><i class="fas fa-edit"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -91,9 +66,9 @@
                             
                     <small>   Showing {{from}} to {{to}} of {{total_data}} entries </small>
                      
-                    <pagination  :limit="2" :data="pd_collections" v-if="query === ''" @pagination-change-page="getData"></pagination>
+                    <pagination  :limit="2" :data="label_collections" v-if="query === ''" @pagination-change-page="getData"></pagination>
 
-                    <pagination  :limit="2" :data="pd_collections" v-else @pagination-change-page="searchData"></pagination>
+                    <pagination  :limit="2" :data="label_collections" v-else @pagination-change-page="searchData"></pagination>
                     </div>
                 </div>
                
@@ -101,34 +76,19 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card shadow mb-4 position-relative" v-if="formShow">
-                        <div class="cross_button"> <i class="fas fa-times"></i></div>
+                        <div @click="closeForm()" class="cross_button"> <i class="fas fa-times"></i></div>
                         <div class="card-body">
-                            <p v-if="editMode" class="alert  alert-warning"><b>Warning: </b> You are now editing "{{collection_form.title}}" </p>
-                            <form @submit.prevent="editMode ? updateCollection() : saveCollection()" @keydown="collection_form.onKeydown($event)">
+                            
+                            <form @submit.prevent="editMode ? updateLabels() : saveLabels()" @keydown="label_form.onKeydown($event)">
+                                <p v-if="editMode" class="alert  alert-warning"><b>Warning: </b> You are now editing "{{label_form.title}}" </p>
                             <div class="form-group">
-                                <label for="title">Collection Title</label>
-                                <input type="text" :class="{ 'is-invalid': collection_form.errors.has('title') }"  v-model="collection_form.title" placeholder="Enter Collection Title"  class="form-control">
+                                <label for="title">Label Title</label>
+                                <input type="text" :class="{ 'is-invalid': label_form.errors.has('title') }"  v-model="label_form.title" placeholder="Enter label Title"  class="form-control">
 
-                                  <has-error :form="collection_form" field="title"></has-error>
+                                  <has-error :form="label_form" field="title"></has-error>
                                
                             </div>
-                            <div class="row">
-                                <div class="col-md-9">
-                                     <div class="form-group">
-                                        <label for="sub_collection">Select Some Subcollection</label>
-                                        <multiselect :close-on-select="false" track-by="id" :class="{ 'is-invalid': collection_form.errors.has('sub_collection') }" label="title" :multiple="true" v-model="collection_form.sub_collection" :options="sub_collection_options"></multiselect>
-                                        
-                                        <small class="text-danger" v-if="collection_form.errors.has('sub_collection')">{{collection_form.errors.get('sub_collection')}}</small>
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mt-3">
-                                    <div class="form-group mt-3">
-                                         <button type="button" @click="showModal = true" class="btn btn-success"><i class="fas fa-plus"></i> Add Subcollection</button>
-                                    </div>
-                                   
-                                </div>
-                            </div>
+             
 
                               <button type="submit" class="btn btn-lg btn-primary"><span v-if="editMode">Update</span> <span v-else>Save</span></button>
                             </form>
@@ -147,11 +107,10 @@ import Form from 'vform';
 import Multiselect from 'vue-multiselect';
 export default {
     created() {
-        this.sub_collection_options = this.subcollections;
-        this.pd_collections = this.collections;
-        this.from = this.collections.from;
-        this.to = this.collections.to;
-        this.total_data = this.collections.total;
+        this.label_collections = this.labels;
+        this.from = this.labels.from;
+        this.to = this.labels.to;
+        this.total_data = this.labels.total;
     },
     data() {
         return {
@@ -159,9 +118,7 @@ export default {
             editMode: false,
             query: "",
             queryField:"title",
-            pd_collections: [],
-            sub_collection: [],
-            sub_collection_options: [],
+            label_collections: [],
             showModal: false,
             from: 0,
             to: 0,
@@ -169,12 +126,8 @@ export default {
             pagnate_per_page: 10,
             orderBy:'id',
             orderByDir:'desc',
-            collection_form: new Form({
-                id: '',
-                title: '',
-                sub_collection: '',
-            }),
-            sub_collection_form: new Form({
+
+            label_form: new Form({
                 id: '',
                 title: '',
             })
@@ -195,28 +148,24 @@ export default {
     },
     props: {
         labels: {
-            type: Array,
-        },
-        collections: {
-            type: Object,
-        },
-        subcollections:{
-            type: Array,
-        },
-        image: {
             type: Object,
         },
 
     },
 
     methods: {
+        closeForm(){
+            this.editMode = false;
+            this.label_form.reset();
+            this.label_form.clear();
+             this.formShow = false;
+        },
 
         getData(page=1){
             this.$Progress.start();
-            axios.get('/app/getcollections/?page='+page+'&per_page='+this.pagnate_per_page+'&orderBy='+this.orderBy+'&orderByDir='+this.orderByDir)
+            axios.get('/app/getlabels/?page='+page+'&per_page='+this.pagnate_per_page+'&orderBy='+this.orderBy+'&orderByDir='+this.orderByDir)
                 .then(res => {
-                    console.log(res);
-                    this.pd_collections = res.data;
+                    this.label_collections = res.data;
                     this.total_data = res.data.total;
                     this.from = res.data.from;
                     this.to = res.data.to;
@@ -230,10 +179,9 @@ export default {
 
         searchData(page=1){
             this.$Progress.start();
-            axios.get('/app/collections/'+this.queryField+'/'+this.query+'/?page='+page+'&per_page='+this.pagnate_per_page+'&orderBy='+this.orderBy+'&orderByDir='+this.orderByDir)
+            axios.get('/app/labels/'+this.queryField+'/'+this.query+'/?page='+page+'&per_page='+this.pagnate_per_page+'&orderBy='+this.orderBy+'&orderByDir='+this.orderByDir)
                 .then(res => {
-                    console.log(res);
-                    this.pd_collections = res.data;
+                    this.label_collections = res.data;
                     this.total_data = res.data.total;
                     this.from = res.data.from;
                     this.to = res.data.to;
@@ -251,17 +199,20 @@ export default {
             }else{
                 this.searchData()
             }
-            console.log(this.pagnate_per_page);
         },
-        storeSubCollection(){
+        storeLabel(){
         this.$Progress.start();
-        this.sub_collection_form.busy = true;
-         this.sub_collection_form.post('/app/subcollections')
+        this.label_form.busy = true;
+         this.label_form.post('/app/labels')
          .then( ({data}) => {
-            console.log(data);
             this.$Progress.finish();
             this.showModal = false;
-            this.successMsg("Subcollection Stored Successfully");
+            this.label_collections = data;
+           iziToast.success({
+                    title: 'Success',
+                    position: 'topRight',
+                    message:  'Label Stored Successfully',
+            })
          })
 
          .catch( err => {
@@ -274,15 +225,15 @@ export default {
          })
 
         },
-        // store Collection into database
-        saveCollection() {
+        // store label into database
+        saveLabels() {
             this.$Progress.start()
-            this.collection_form.busy = true
-            this.collection_form.post('/app/collections')
+            this.label_form.busy = true
+            this.label_form.post('/app/labels')
              .then(response => {
                     this.$Progress.finish();
-                    this.collection_form.reset();
-                    this.collection_form.clear();
+                    this.label_form.reset();
+                    this.label_form.clear();
                     // this.form.fill(role)
                     iziToast.success({
                         title: 'Success',
@@ -306,29 +257,27 @@ export default {
 
         },
 
-        addCollection(data){
+        addLabel(data){
             this.formShow = true;
             this.editMode = false;
-            this.collection_form.reset();
-            this.collection_form.clear();
+            this.label_form.reset();
+            this.label_form.clear();
         },
-        editCollection(data){
+        editLabel(data){
             this.formShow = true;
             this.editMode = true;
-            this.collection_form.id = data.id;
-            this.collection_form.title = data.title;
-            this.collection_form.sub_collection = data.subcollections;
-
+            this.label_form.id = data.id;
+            this.label_form.title = data.title;
         },
                 // store product into database
-        updateCollection() {
+        updateLabels() {
             this.$Progress.start()
-            this.collection_form.busy = true
-            this.collection_form.put('/app/collections/'+this.collection_form.id)
+            this.label_form.busy = true
+            this.label_form.put('/app/labels/'+this.label_form.id)
              .then(response => {
                     this.$Progress.finish();
-                    this.collection_form.reset();
-                    this.collection_form.clear();
+                    this.label_form.reset();
+                    this.label_form.clear();
                     // this.form.fill(role)
                     iziToast.success({
                         title: 'Success',
@@ -382,12 +331,16 @@ export default {
 }
 .cross_button{
     position: absolute;
-    right: 29px;
-    top: 11px;
+    right: -15px;
+    top: -16px;
+    z-index: 10;
 }
 .cross_button i{
-    font-size: 23px;
-    color: #747d8c;
+    font-size: 19px;
+    color: #fff;
+    background: red;
+    padding: 7px 10px;
     cursor: pointer;
+    border-radius: 100%;
 }
 </style>
