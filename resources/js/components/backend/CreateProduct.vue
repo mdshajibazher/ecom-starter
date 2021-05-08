@@ -14,7 +14,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Product SKU</label>
-                                <input type="text" :class="{ 'is-invalid': validationErrors.sku }" v-model="product_sku" placeholder="Product Name" class="form-control">
+                                <input type="text" :class="{ 'is-invalid': validationErrors.sku }" v-model="product_sku" placeholder="Enter SKU" class="form-control">
                                <p class="text-danger" v-if="validationErrors.sku">{{validationErrors.sku[0]}}</p>
                             </div>
                             <div class="form-group">
@@ -43,7 +43,7 @@
                                 <vue-dropzone :class="{ 'is-invalid': validationErrors.product_image }" ref="myVueDropzone" id="dropzone" :options="dropzoneOptions" v-on:vdropzone-success="uploadImage" @vdropzone-removed-file="removeImage" @vdropzone-mounted="showImage"></vue-dropzone>
                             </div>
                             <div v-if="imageEditMode">
-                                <button @click="clearImg()" class="btn btn-danger float-right">Clear Image</button>
+                                <button @click="clearImg(products.id)" class="btn btn-danger float-right">Clear Image</button>
                             </div>
 
                              <p class="text-danger" v-if="validationErrors.product_image">{{validationErrors.product_image[0]}}</p>
@@ -119,7 +119,7 @@
                 </div>
             </div>
 
-            <button @click="saveProduct" type="submit" class="btn btn-lg btn-primary"><span v-if="Mode">Update</span> <span v-else>Save</span></button>
+            <button @click="saveProduct" type="submit" class="btn btn-lg btn-primary"><span v-if="edit_mode">Update</span> <span v-else>Save</span></button>
             <a href="/product" class="btn btn-secondary btn-lg">Cancel</a>
     </section>
 </template>
@@ -134,23 +134,22 @@ import ValidationErrors from '../error/ValidationErrors';
 export default {
 
     created() {
-        if (this.Mode==false) {
+        if (this.edit_mode==false) {
             this.$set(this.dropzoneOptions,'addRemoveLinks',true);
         }
         this.subcollections_options = this.subcollections;
-        if (this.Mode==true) {
-        this.sub_collections = this.products.subcollections;
-        }
+
     },
     mounted() {
-        if (this.Mode==false) {
+        if (this.edit_mode==false) {
             this.imageEditMode=false;
         }
-        if(this.Mode){
+        if(this.edit_mode){
             this.imageEditMode=true;
             this.product_name=this.products.title;
             this.product_sku=this.products.sku;
             this.description=this.products.description;
+            this.sub_collections = this.products.subcollections;
             this.product_variant=[];
             var available_variants=[];
             var ref=this;
@@ -183,10 +182,9 @@ export default {
                 })
             })
             
-            
             /*images*/
             $.each(ref.image.images,function(key,value) {
-                ref.images.push(value.file_path);
+                ref.prevUplodedImage.push(value.file_path);
             })
         }
     } ,
@@ -199,6 +197,7 @@ export default {
             product_sku: '',
             description: '',
             images: [],
+            prevUplodedImage: [],
             validationErrors: '',
             product_variant: [
                 {
@@ -230,7 +229,7 @@ export default {
         Multiselect
     },
     props: {
-        Mode: {
+        edit_mode: {
             type: Boolean,
             default:false
         },
@@ -287,25 +286,43 @@ export default {
         },
         showImage(){
             var ref=this;
-            var img=ref.images;
+            var img=ref.prevUplodedImage;
             this.imageEditMode=true;
             if (this.imageEditMode) {
                 var file = { size: 215,name:'image', type: "image/png" };
                 var url = '';
                 ref.$nextTick(function() {
-                    for (var i = 0; i <ref.images.length; i++) {
+                    for (var i = 0; i <ref.prevUplodedImage.length; i++) {
                         console.log(img[i]);
                         this.$set(file,'name',img[i]);
-                        url = '/images/'+img[i];
+                        url = '/images/products/thumb/'+img[i];
                         ref.$refs.myVueDropzone.manuallyAddFile(file, url);
                     }
                 });
             }
         },
-        clearImg(){
+        clearImg(id){
+            let confirmation = confirm('are you sure you want to clear ? images will be deleted permanently');
+            if(confirmation){
             this.imageEditMode=false;
-            this.$refs.myVueDropzone.$el.innerHTML='';
-            this.images=[];
+            axios.post(`/app/product/${id}/deleteimages`)
+            .then(({data}) => {
+                this.$refs.myVueDropzone.$el.innerHTML='';
+                this.images=[];
+                iziToast.success({
+                    title: 'Success',
+                    position: 'topRight',
+                    message: data
+                });
+            })
+            .catch(e => {
+                iziToast.error({
+                title: 'Error',
+                position: 'topRight',
+                message: e.response.data.message,
+            });
+            })
+            }
         },
         newVariant() {
             let all_variants = this.variants.map(el => el.id)
@@ -355,7 +372,7 @@ export default {
             this.$Progress.start();
             this.validationErrors = '';
             let product = {
-                editImage:(!this.imageEditMode?true:false),
+                editImage:this.imageEditMode,
                 title: this.product_name,
                 sku: this.product_sku,
                 description: this.description,
@@ -365,7 +382,7 @@ export default {
                 sub_collections: this.sub_collections
             }
 
-            if(this.Mode){
+            if(this.edit_mode){
                 axios.put('/app/product/'+this.products.id, product).then(response => {
                    this.successMsg("Record updated successfully");
                    this.$Progress.finish();

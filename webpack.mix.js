@@ -17,4 +17,4 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/frontend.scss', 'public/css')
     .scripts([
         'resources/js/script.js',
-    ], 'public/js/script.js');
+    ], 'public/js/script.js',);

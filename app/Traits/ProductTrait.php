@@ -26,9 +26,9 @@ trait ProductTrait{
 	    $exploed1 = explode(";", $image);
 	    $exploed2 = explode("/", $exploed1[0]);
 	    $filename =  uniqid().'.'.$exploed2[1];
-	    // Image::make($image)->resize(440, 586)->save(public_path('images/products/original/'.$filename));
-	    Image::make($image)->resize(440, 586)->save(public_path('images/products/resized/'.$filename));
-	    Image::make($image)->resize(215, 215)->save(public_path('images/products/thumb/'.$filename));
+	    Image::make($image)->save(public_path('images/products/original/'.$filename));
+	    Image::make($image)->fit(440, 586)->save(public_path('images/products/resized/'.$filename));
+	    Image::make($image)->fit(215, 215)->save(public_path('images/products/thumb/'.$filename));
 	    return $filename;
 	}
 
@@ -108,6 +108,8 @@ trait ProductTrait{
 
     private function data_validate($request,$id=null)
     {
+        ($id == null) ?  $img_validation =  ['required','array','min:1'] : $img_validation =  [];
+     
         $this->validate($request, [
             'title' => 'bail|required|string|max:100',
             'sku' => 'bail|required|max:100|unique:products,sku,'.($id!=null?$id:''),
@@ -116,7 +118,7 @@ trait ProductTrait{
             'product_variant_prices' => ($request['product_variant'])?'required':'',
             'product_variant_prices.*.price' => 'required|numeric',
             'product_variant_prices.*.stock' => 'required|numeric',
-            'product_image' => 'required|array|min:1',
+            'product_image' =>  $img_validation,
             'product_image.*' => 'required',
             'sub_collections' => 'required',
           

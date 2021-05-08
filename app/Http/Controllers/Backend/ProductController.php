@@ -16,6 +16,7 @@ use App\Models\Subcollection;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantPrice;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
@@ -133,6 +134,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+
         $product_id=$product->id;
         $this->data_validate($request, $product_id);
         DB::beginTransaction();
@@ -144,12 +146,15 @@ class ProductController extends Controller
                 'description' =>$request->description,
             ]);
 
-            if ($request->editImage) {
-                $allimages=$product->load('images');
-                foreach ($allimages->images as $key => $value) {
-                    unlink(public_path('images/'.$value->file_path));
-                }
-                $product->images()->delete();
+            if ($request->product_image) {
+                // $allimages=$product->load('images');
+                // foreach ($allimages->images as $key => $value) {
+                //     unlink(public_path('images/products/original/'.$value->file_path));
+                //     unlink(public_path('images/products/thumb/'.$value->file_path));
+                //     unlink(public_path('images/products/resized/'.$value->file_path));
+                // }
+                // $product->images()->delete();
+
                 $imagepath=$this->uploadImage($request);
                 foreach ($imagepath as $key => $value) {
                     ProductImage::create([
@@ -191,5 +196,29 @@ class ProductController extends Controller
         $orderBy = $request->orderBy ? $request->orderBy : 'id';
         $orderByDir = $request->orderByDir ? $request->orderByDir : 'desc';
         return Product::with('prices.variant_one','prices.variant_two','prices.variant_three')->orderBy($orderBy,$orderByDir)->paginate($paginate_perpage);
+    }
+
+    public function deleteImages($id){
+        $productImage = ProductImage::where('product_id', $id)->get();
+        foreach ($productImage as $key => $value) {
+            $thumb_location = 'images/products/thumb/'.$value->file_path;
+            $original_location = 'images/products/original/'.$value->file_path;
+            $resized_location = 'images/products/resized/'.$value->file_path;
+
+            if (File::exists($thumb_location)) {
+                File::delete($thumb_location);
+            }
+
+            if (File::exists($original_location)) {
+                File::delete($original_location);
+            }
+
+            if (File::exists($resized_location)) {
+                File::delete($resized_location);
+            }
+
+           $result =  ProductImage::where('id', $value->id)->delete();
+        }
+        return "Product Image Deleted Successfully";
     }
 }

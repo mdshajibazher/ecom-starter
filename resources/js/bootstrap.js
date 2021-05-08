@@ -4,7 +4,7 @@ try {
     window.$ = window.jQuery = require('jquery');
     window.iziToast = require('izitoast/dist/js/iziToast.min.js');
     window.Swal = require('sweetalert2');
-    require('select2');
+    // require('select2');
     // Dropify
     require('dropify/src/js/dropify');
     // Nestable
@@ -12,10 +12,12 @@ try {
 
 
     require('bootstrap');
+    // require('metismenu');
 
-    $('select').select2({
-        theme: 'bootstrap4',
-    })
+    // $('select').select2({
+    //     theme: 'bootstrap4',
+    // })
+    // $('.app-sidebar__inner').metisMenu();
 
 } catch (e) {}
 

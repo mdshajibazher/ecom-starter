@@ -59,10 +59,23 @@
                                     <td>{{products_collections.from+index}}</td>
                                     <td>{{pd.title}}</td>
                                     <td>
-                                    <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
+                                        <div style="height: 80px; overflow: hidden" id="variant">
+                                        <table class="table" v-for="(price,index) in pd.prices" :key="index">
+                                            <tr>
+                                                <th>{{price.variant_one==null?'':price.variant_one.variant+'/' }} 
+                                                {{price.variant_two==null?'':price.variant_two.variant+'/' }}
+                                                {{price.variant_three==null?'':price.variant_three.variant+'/' }} </th>
+                                            </tr>
+                                            <tr>
+                                                <td>Price :  <b>{{ price.price }}</b> InStock :  <b>{{ price.stock }}</b> </td>
+                                            </tr>
+                                        </table>
+                                        </div>
+
+                                    <!-- <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
                                             <span v-for="(price,index) in pd.prices" :key="index" style=" word-wrap: normal;">
                                             <dt class="col-md-3 pb-0">
-                                                {{price.variant_one==null?'':price.variant_one.variant+'/' }} {{price.variant_two==null?'':price.variant_two.variant+'/' }} {{price.variant_three==null?'':price.variant_three.variant+'/' }}
+                                               <p> {{price.variant_one==null?'':price.variant_one.variant+'/' }} {{price.variant_two==null?'':price.variant_two.variant+'/' }} {{price.variant_three==null?'':price.variant_three.variant+'/' }} </p>
 
                                             </dt>
                                             <dd class="col-md-9">
@@ -73,7 +86,7 @@
                                             </dd>
                                             </span>
     
-                                    </dl>
+                                    </dl> -->
                                     <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more</button>
                                 </td>
                                     <td><a :href="url.url+'/app/product/'+pd.id+'/edit'" class="btn btn-primary"><i class="fas fa-edit"></i></a></td>
@@ -140,7 +153,7 @@ export default {
             type: Object,
         },
         url:{
-            type: Array
+            type: Object
         }
 
     },
