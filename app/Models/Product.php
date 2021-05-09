@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        'title', 'sku', 'description'
+        'title', 'sku','collection_id','description'
     ];
 
     public function variants()
@@ -32,5 +32,8 @@ class Product extends Model
 
     public function Subcollections(){
         return $this->belongsToMany(Subcollection::class);
+    }
+    public function Collection(){
+        return $this->belongsTo(Collection::class);
     }
 }

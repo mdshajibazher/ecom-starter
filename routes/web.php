@@ -18,6 +18,7 @@ use App\Http\Controllers\Frontend\FrontendController;
 */
 
 Route::get('/',[FrontendController::class,'Home'])->name('homepage');
+Route::get('/product_details/{id}',[FrontendController::class,'ProductDetails']);
 
 Auth::routes();
 // Socialite routes

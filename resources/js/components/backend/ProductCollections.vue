@@ -1,65 +1,56 @@
 <template>
     <div>
-
         <vue-modal v-if="showModal" @close="showModal = false">
         <div slot="body">
-
         <form @keydown="sub_collection_form.onKeydown($event)">
+            <div class="form-group">
+                    <label for="label">Select a Label</label>
+                    <multiselect  track-by="id" :class="{ 'is-invalid': sub_collection_form.errors.has('label') }" label="title" :multiple="false" v-model="sub_collection_form.label" :options="labels"></multiselect>
+                    
+                    <small class="text-danger" v-if="sub_collection_form.errors.has('label')">{{sub_collection_form.errors.get('label')}}</small>
+            </div>
             <div class="form-group">
                 <label for="title">Subcollection Title</label>
                 <input type="text" :class="{ 'is-invalid': sub_collection_form.errors.has('title') }" class="form-control"  placeholder="Enter Subcollection Title" v-model="sub_collection_form.title">
-
-                    <has-error :form="sub_collection_form" field="title"></has-error>
+                <has-error :form="sub_collection_form" field="title"></has-error>
             </div>
 
             <div class="form-group">
-                <label for="label">Select a Label</label>
-                <multiselect  track-by="id" :class="{ 'is-invalid': sub_collection_form.errors.has('label') }" label="title" :multiple="false" v-model="sub_collection_form.label" :options="labels"></multiselect>
-                
-                <small class="text-danger" v-if="sub_collection_form.errors.has('label')">{{sub_collection_form.errors.get('label')}}</small>
-            
-        </div>
+                <vue-dropify v-model="sub_collection_form.image" uploadIcon="fas fa-arrow-circle-up"/>
+            </div>
         
         </form>
         </div>
         <div slot="footer">
 
         <button class="btn btn-danger" @click="showModal = false">
-                Close 
+             Close 
         </button>
         <button :disabled="sub_collection_form.busy" @click="storeSubCollection()" type="button" class="btn btn-primary">Submit</button>
         </div>
         </vue-modal>
 
-
-
-
-
-     <div class="app-page-title">
-        <div class="page-title-wrapper">
-            <div class="page-title-heading">
-                <div class="page-title-icon">
-                    <i class="pe-7s-news-paper icon-gradient bg-mean-fruit">
-                    </i>
+        <div class="app-page-title">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div class="page-title-icon">
+                        <i class="pe-7s-news-paper icon-gradient bg-mean-fruit">
+                        </i>
+                    </div>
+                    <div>All collections</div>
                 </div>
-                <div>All collections</div>
-            </div>
-            <div class="page-title-actions">
-                <div class="d-inline-block dropdown">
-                    <button @click.prevent="addCollection"  type="button" class="btn-shadow btn btn-info">
-                        <span class="btn-icon-wrapper pr-2 opacity-7">
-                            <i class="fas fa-plus-circle fa-w-20"></i>
-                        </span>
-                        Create Collection
-                    </button>
+                <div class="page-title-actions">
+                    <div class="d-inline-block dropdown">
+                        <button @click.prevent="addCollection"  type="button" class="btn-shadow btn btn-info">
+                            <span class="btn-icon-wrapper pr-2 opacity-7">
+                                <i class="fas fa-plus-circle fa-w-20"></i>
+                            </span>
+                            Create Collection
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-
-
-
             <div class="row">
             <div class="col-md-6">
                        
@@ -83,6 +74,7 @@
                         <tr>
                             <th @click="sort('id')" class="text-center" style="cursor: pointer"># <span v-html="getsortIcon(orderByDir)"></span> </th>
                             <th @click="sort('title')" style="cursor: pointer">Title <span v-html="getsortIcon(orderByDir)"></span></th>
+                            <th>image</th>
                             <th class="text-center">Action</th>
                         </tr>
                         </thead>
@@ -91,6 +83,7 @@
                             <tr v-for="(collection,index) in pd_collections.data" :key="collection.id">
                                 <td>{{pd_collections.from+index}}</td>
                                 <td>{{collection.title}}</td>
+                                <td><img width="50px" :src="'/images/collections/resized/'+collection.image" alt=""></td>
                                 <td><button @click="editCollection(collection)" type="button" class="btn btn-primary"><i class="fas fa-edit"></i></button></td>
                             </tr>
                         </tbody>
@@ -139,6 +132,13 @@
                                    
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <vue-dropify v-model="collection_form.image" uploadIcon="fas fa-arrow-circle-up"/>
+                            </div>
+
+                            <div class="form-group">
+                                <img class="img-thumbnail my-3" v-if="!collection_form.image && editMode" style="width: 100%" :src="'/images/collections/resized/'+oldCollectionImage" alt="">
+                            </div>
 
                               <button type="submit" class="btn btn-lg btn-primary"><span v-if="editMode">Update</span> <span v-else>Save</span></button>
                             </form>
@@ -152,7 +152,7 @@
 </template>
 
 <script>
-
+import VueDropify from 'vue-dropify';
 import Form from 'vform';
 import Multiselect from 'vue-multiselect';
 export default {
@@ -165,6 +165,7 @@ export default {
     },
     data() {
         return {
+            oldCollectionImage: "",
             formShow: false,
             editMode: false,
             query: "",
@@ -182,12 +183,14 @@ export default {
             collection_form: new Form({
                 id: '',
                 title: '',
+                image: '',
                 sub_collection: '',
             }),
             sub_collection_form: new Form({
                 id: '',
                 title: '',
                 label: '',
+                image: '',
             })
         }
     },
@@ -202,7 +205,8 @@ export default {
         }
     },
     components: {
-        Multiselect
+        Multiselect,
+        'vue-dropify': VueDropify
     },
     props: {
         labels: {
@@ -339,10 +343,11 @@ export default {
             this.editMode = true;
             this.collection_form.id = data.id;
             this.collection_form.title = data.title;
+            this.oldCollectionImage = data.image;
             this.collection_form.sub_collection = data.subcollections;
 
         },
-                // store product into database
+                // store Collection into database
         updateCollection() {
             this.$Progress.start()
             this.collection_form.busy = true

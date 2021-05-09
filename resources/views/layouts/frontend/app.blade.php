@@ -16,10 +16,11 @@
 </head>
 
 <body class="stretched">
-
+	
 	<!-- Document Wrapper
 	============================================= -->
-	<div id="wrapper" class="clearfix">
+	<div id="vue-app" class="clearfix">
+
 
 		@include('layouts.frontend.partials.top-bar')
 
@@ -36,6 +37,7 @@
 		</section><!-- #content end -->
 
 		@include('layouts.frontend.partials.footer')
+		@yield('modal')
 
 	</div><!-- #wrapper end -->
 
@@ -51,6 +53,8 @@
 	<!-- Footer Scripts
 	============================================= -->
 	<script src="{{asset('frontend/js/functions.js')}}"></script>
+	<script src="{{asset('js/frontend.js')}}"></script>
+	@stack('js')
 
 </body>
 </html>

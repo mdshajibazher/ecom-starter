@@ -114,6 +114,7 @@ trait ProductTrait{
             'title' => 'bail|required|string|max:100',
             'sku' => 'bail|required|max:100|unique:products,sku,'.($id!=null?$id:''),
             'description' => 'required',
+            'collection' => 'required',
             'product_variant.*.tags' => 'required',
             'product_variant_prices' => ($request['product_variant'])?'required':'',
             'product_variant_prices.*.price' => 'required|numeric',

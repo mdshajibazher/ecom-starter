@@ -4,7 +4,15 @@
  * code may be modified to fit the specific needs of your application.
  */
 
-try {
-    window.Popper = require('popper.js').default;
-    require('bootstrap');
-} catch (e) {}
+ window.Vue = require('vue');
+ window.axios = require('axios');
+ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+
+
+ Vue.component('ViewButton', require('./components/frontend/ViewButton').default);
+ Vue.component('ProductDetail', require('./components/frontend/ProductDetail').default);
+
+ const app = new Vue({
+    el: '#vue-app',
+});

@@ -17,6 +17,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('sku')->unique();
+            $table->foreignId('collection_id')->constrained();
             $table->text('description')->nullable();
             $table->timestamps();
         });

@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Subcollection;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 class CollectionController extends Controller
 {
@@ -38,8 +40,19 @@ class CollectionController extends Controller
             'title' => 'required|unique:collections',
             'sub_collection' => 'required',
         ]);
-
         $collection = new Collection;
+        if($request->image){
+            $image = $request->image[0];
+            $image_position = strpos($request->image[0], ';');
+            $sub= substr($request->image[0], 0 ,$image_position);
+            $image_extension =explode('/', $sub)[1];
+            $image_name = Str::slug($request->title).time().".".$image_extension;
+            $original_location = 'images/collections/original/'.$image_name;
+            $resized_location = 'images/collections/resized/'.$image_name;
+            Image::make($image)->save($original_location);
+            Image::make($image)->fit(600,400)->save($resized_location);
+            $collection->image = $image_name;
+        }
         $collection->title = $request->title;
         $collection->slug = Str::slug($request->title);
         $collection->save();
@@ -68,6 +81,29 @@ class CollectionController extends Controller
             'title' => 'required|unique:collections,title,'.$collection->id,
             'sub_collection' => 'required',
         ]);
+        
+        if($request->image){
+             //Old Image Location
+             $old_original_location = 'images/collections/original/'.$collection->image;
+             $old_resized_location = 'images/collections/resized/'.$collection->image;
+             //Delete Old Image
+             if (File::exists($old_original_location)) {
+                 File::delete($old_original_location);
+             }
+             if (File::exists($old_resized_location)) {
+                 File::delete($old_resized_location);
+             }
+            $image = $request->image[0];
+            $image_position = strpos($request->image[0], ';');
+            $sub= substr($request->image[0], 0 ,$image_position);
+            $image_extension =explode('/', $sub)[1];
+            $image_name = Str::slug($request->title).time().".".$image_extension;
+            $original_location = 'images/collections/original/'.$image_name;
+            $resized_location = 'images/collections/resized/'.$image_name;
+            Image::make($image)->save($original_location);
+            Image::make($image)->fit(600,400)->save($resized_location);
+            $collection->image = $image_name;
+        }
 
         $collection->title = $request->title;
         $collection->slug = Str::slug($request->title);

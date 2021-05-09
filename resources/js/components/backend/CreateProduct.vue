@@ -23,6 +23,14 @@
                                 <p class="text-danger" v-if="validationErrors.description">{{validationErrors.description[0]}}</p>
                             </div>
 
+                              <div class="form-group">
+                                <label for="sub_collection">Select Collection</label>
+                                <multiselect @input="getSubCollectionbyId()"  track-by="id" :class="{ 'is-invalid': validationErrors.collection }" label="title"  v-model="collection" :options="collections_options"></multiselect>
+                                
+                                <small class="text-danger" v-if="validationErrors.collection">{{validationErrors.collection[0]}}</small>
+                                
+                            </div>
+
                             <div class="form-group">
                                 <label for="sub_collection">Select Subcollections</label>
                                 <multiselect :close-on-select="false" track-by="id" :class="{ 'is-invalid': validationErrors.sub_collections }" label="title" :multiple="true" v-model="sub_collections" :options="subcollections_options"></multiselect>
@@ -137,7 +145,8 @@ export default {
         if (this.edit_mode==false) {
             this.$set(this.dropzoneOptions,'addRemoveLinks',true);
         }
-        this.subcollections_options = this.subcollections;
+        this.collections_options = this.props_collections;
+
 
     },
     mounted() {
@@ -145,10 +154,12 @@ export default {
             this.imageEditMode=false;
         }
         if(this.edit_mode){
+            console.log(this.products);
             this.imageEditMode=true;
             this.product_name=this.products.title;
             this.product_sku=this.products.sku;
             this.description=this.products.description;
+            this.collection = this.products.collection;
             this.sub_collections = this.products.subcollections;
             this.product_variant=[];
             var available_variants=[];
@@ -191,6 +202,8 @@ export default {
     data() {
         return {
             imageEditMode:false,
+            collection: '',
+            collections_options: [],
             sub_collections: '',
             subcollections_options: [],
             product_name: '',
@@ -246,7 +259,7 @@ export default {
         prices: {
             type: Object,
         },
-        subcollections:{
+        props_collections:{
              type: Array,
         },
 
@@ -263,8 +276,12 @@ export default {
             });
         },
         getSubCollectionbyId(){
+            if(this.collection == null){
+                this.subcollections_options = [];
+            }else{
             axios.get('/app/collections/'+this.collection.id)
             .then( ({data}) => {
+                this.subcollections_options = data.subcollections;
                 console.log(data);
             })
             .catch( (e) => {
@@ -274,6 +291,7 @@ export default {
                     message: e.response.data.message,
                 });
             })
+            }
         },
         errorFree(){
             this.validationErrors = '';
@@ -375,6 +393,7 @@ export default {
                 editImage:this.imageEditMode,
                 title: this.product_name,
                 sku: this.product_sku,
+                collection: this.collection,
                 description: this.description,
                 product_image: this.images,
                 product_variant: this.product_variant,

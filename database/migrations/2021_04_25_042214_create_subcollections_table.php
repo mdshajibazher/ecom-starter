@@ -18,6 +18,7 @@ class CreateSubcollectionsTable extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->foreignId('label_id')->constrained();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

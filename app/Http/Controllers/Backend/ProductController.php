@@ -42,7 +42,8 @@ class ProductController extends Controller
     {
         $variants = Variant::all();
         $subcollections = Subcollection::all();
-        return view('backend.products.create', compact('variants','subcollections'));
+        $collections = Collection::all();
+        return view('backend.products.create', compact('variants','subcollections','collections'));
     }
 
     /**
@@ -60,11 +61,11 @@ class ProductController extends Controller
             $product=Product::create([
                 'title'=>$request['title'],
                 'sku'=>$request['sku'],
-                'description'=>$request['description']
+                'description'=>$request['description'],
+                'collection_id'=> $request['collection']['id'],
             ]);
 
             $product_id = $product->id;
-    
             $imagepath=$this->uploadImage($request);
             foreach ($imagepath as $key => $value) {
                 ProductImage::create([
@@ -75,11 +76,11 @@ class ProductController extends Controller
             $product_variant_ids=$this->insertProductVariant($request,$product_id);
             $this->insertProductVariantPrices($request,$product_variant_ids,$product_id);
             $this->AttachSubcollection($request, $product);
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollback();
-        }
-        
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+            }
+            
         
         
             
@@ -114,13 +115,14 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::with('Subcollections')->findOrFail($id);
+        $product = Product::with('Collection','Subcollections')->findOrFail($id);
         $data['variants'] = Variant::all();
         $data['product']=$product;
         $data['product']['product_variants']=ProductVariant::where('product_id',$product->id)->get()->groupBy('variant_id');
         $data['prices']=$product->load('prices.variant_one','prices.variant_two','prices.variant_three');
         $data['images']=$product->load('images');
         $data['subcollections']=Subcollection::all();
+        $data['collections']=Collection::all();
    
         return view('backend.products.edit', $data);
     }
@@ -147,14 +149,6 @@ class ProductController extends Controller
             ]);
 
             if ($request->product_image) {
-                // $allimages=$product->load('images');
-                // foreach ($allimages->images as $key => $value) {
-                //     unlink(public_path('images/products/original/'.$value->file_path));
-                //     unlink(public_path('images/products/thumb/'.$value->file_path));
-                //     unlink(public_path('images/products/resized/'.$value->file_path));
-                // }
-                // $product->images()->delete();
-
                 $imagepath=$this->uploadImage($request);
                 foreach ($imagepath as $key => $value) {
                     ProductImage::create([

@@ -10,9 +10,6 @@
                 <input type="text" :class="{ 'is-invalid': label_form.errors.has('title') }" class="form-control"  placeholder="Enter Label Title" v-model="label_form.title">
                 <has-error :form="label_form" field="title"></has-error>
             </div>
-
-
-        
         </form>
         </div>
         <div slot="footer">
@@ -23,10 +20,6 @@
         <button :disabled="label_form.busy" @click="storeLabel()" type="button" class="btn btn-primary">Submit</button>
         </div>
         </vue-modal>
-
-
-
-
 
      <div class="app-page-title">
         <div class="page-title-wrapper">
@@ -76,6 +69,7 @@
                         <tr>
                             <th @click="sort('id')" class="text-center" style="cursor: pointer"># <span v-html="getsortIcon(orderByDir)"></span> </th>
                             <th @click="sort('title')" style="cursor: pointer">Title <span v-html="getsortIcon(orderByDir)"></span></th>
+                            <th>Image</th>
                             <th class="text-center">Action</th>
                         </tr>
                         </thead>
@@ -84,6 +78,7 @@
                             <tr v-for="(Subcollection,index) in pd_subcollections.data" :key="Subcollection.id">
                                 <td>{{pd_subcollections.from+index}}</td>
                                 <td>{{Subcollection.title}}</td>
+                                 <td><img width="50px" :src="'/images/subcollections/resized/'+Subcollection.image" alt=""></td>
                                 <td><button @click="editSubcollection(Subcollection)" type="button" class="btn btn-primary"><i class="fas fa-edit"></i></button></td>
                             </tr>
                         </tbody>
@@ -108,14 +103,8 @@
                             
                             <form @submit.prevent="editMode ? updateSubcollection() : saveSubcollection()" @keydown="subcollection_form.onKeydown($event)">
                                 <p v-if="editMode" class="alert  alert-warning"><b>Warning: </b> You are now editing "{{subcollection_form.title}}" </p>
-                            <div class="form-group">
-                                <label for="title">Subcollection Title</label>
-                                <input type="text" :class="{ 'is-invalid': subcollection_form.errors.has('title') }"  v-model="subcollection_form.title" placeholder="Enter Subcollection Title"  class="form-control">
 
-                                  <has-error :form="subcollection_form" field="title"></has-error>
-                               
-                            </div>
-                            <div class="row">
+                        <div class="row">
                                 <div class="col-md-9">
                                      <div class="form-group">
                                         <label for="sub_collection">Select a Label</label>
@@ -133,6 +122,25 @@
                                 </div>
                             </div>
 
+
+                            <div class="form-group">
+                                <label for="title">Subcollection Title</label>
+                                <input type="text" :class="{ 'is-invalid': subcollection_form.errors.has('title') }"  v-model="subcollection_form.title" placeholder="Enter Subcollection Title"  class="form-control">
+
+                                  <has-error :form="subcollection_form" field="title"></has-error>
+                               
+                            </div>
+
+                            <div class="form-group">
+                                <vue-dropify v-model="subcollection_form.image" uploadIcon="fas fa-arrow-circle-up"/>
+                            </div>
+
+                              <div class="form-group">
+                                <img class="img-thumbnail my-3" v-if="!subcollection_form.image && editMode" style="width: 100%" :src="'/images/subcollections/resized/'+oldSubcollectionImage" alt="">
+                            </div>
+        
+               
+
                               <button type="submit" class="btn btn-lg btn-primary"><span v-if="editMode">Update</span> <span v-else>Save</span></button>
                             </form>
                         </div>
@@ -145,7 +153,7 @@
 </template>
 
 <script>
-
+import VueDropify from 'vue-dropify';
 import Form from 'vform';
 import Multiselect from 'vue-multiselect';
 export default {
@@ -158,6 +166,7 @@ export default {
     },
     data() {
         return {
+            oldSubcollectionImage: "",
             formShow: false,
             editMode: false,
             query: "",
@@ -176,6 +185,7 @@ export default {
                 id: '',
                 title: '',
                 label: '',
+                image: '',
             }),
             label_form: new Form({
                 id: '',
@@ -194,7 +204,8 @@ export default {
         }
     },
     components: {
-        Multiselect
+        Multiselect,
+        'vue-dropify': VueDropify
     },
     props: {
         labels: {
@@ -325,6 +336,7 @@ export default {
             this.subcollection_form.id = data.id;
             this.subcollection_form.title = data.title;
             this.subcollection_form.label = data.label;
+            this.oldSubcollectionImage = data.image;
 
         },
                 // store product into database

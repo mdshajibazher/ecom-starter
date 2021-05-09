@@ -5,6 +5,6 @@
         <h1 class="h3 mb-0 text-gray-800">Edit Product</h1>
     </div>
     <div id="app">
-        <create-product :subcollections="{{ json_encode($subcollections)}}" :variants="{{ json_encode($variants) }}" :products="{{ json_encode($product) }}" :prices="{{ $prices }}" :image="{{$images}}" :edit_mode="true">Loading</create-product>
+        <create-product :props_collections="{{ json_encode($collections)}}" :subcollections="{{ json_encode($subcollections)}}" :variants="{{ json_encode($variants) }}" :products="{{ json_encode($product) }}" :prices="{{ $prices }}" :image="{{$images}}" :edit_mode="true">Loading</create-product>
     </div>
 @endsection
