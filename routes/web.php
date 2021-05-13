@@ -18,6 +18,9 @@ use App\Http\Controllers\Frontend\FrontendController;
 */
 
 Route::get('/',[FrontendController::class,'Home'])->name('homepage');
+Route::get('/is_logged_in',[FrontendController::class,'isLoggedIn']);
+Route::get('/get_cart_items',[FrontendController::class,'getCartItems']);
+Route::post('/add_to_cart',[FrontendController::class,'addToCart']);
 Route::get('/product_details/{id}',[FrontendController::class,'ProductDetails']);
 
 Auth::routes();

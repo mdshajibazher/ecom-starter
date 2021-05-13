@@ -19,14 +19,14 @@ class DatabaseSeeder extends Seeder
     {
         // Collection::factory(100)->create();
         // Subcollection::factory(100)->create();
-        $this->call(VariantSeeder::class);
-        $this->call(SettingSeeder::class);
-        $this->call(LabelsSeeder::class);
-        $this->call(CollectionSeeder::class);
-        $this->call(SubcollectionSeeder::class);
-        $this->call(PermissionSeeder::class);
-        $this->call(RoleSeeder::class);
+        // $this->call(VariantSeeder::class);
+        // $this->call(SettingSeeder::class);
+        // $this->call(LabelsSeeder::class);
+        // $this->call(CollectionSeeder::class);
+        // $this->call(SubcollectionSeeder::class);
+        // $this->call(PermissionSeeder::class);
+        // $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
-        $this->call(MenuSeeder::class);
+        // $this->call(MenuSeeder::class);
     }
 }

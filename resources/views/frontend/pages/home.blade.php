@@ -1,5 +1,10 @@
 @extends('layouts.frontend.app')
 @section('title', 'Home')
+
+@section('slider')
+@include('layouts.frontend.partials.slider')
+@endsection
+
 @section('modal')
 <!-- Modal -->
 <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">

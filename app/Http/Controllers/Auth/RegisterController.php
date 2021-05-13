@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+
 
 class RegisterController extends Controller
 {
@@ -54,6 +57,12 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'phone' => ['required','numeric',function ($attribute, $value, $fail) {
+                $phone_validate = preg_match("/^(?:\+88|88)?(01[3-9]\d{8})$/",$value);
+                if ($phone_validate == 0) {
+                    $fail('('.$value.') is an invalid Bangladeshi phone number');
+                }
+            }],
         ]);
     }
 
@@ -65,11 +74,26 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $address = "";
+        isset($data['address']) ?  $address = $data['address'] : "";
         return User::create([
             'role_id' => Role::where('slug','user')->first()->id,
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'phone' => $data['phone'],
+            'address' => $address,
         ]);
+    }
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        $this->guard()->login($user);
+
+        return $user;
     }
 }
