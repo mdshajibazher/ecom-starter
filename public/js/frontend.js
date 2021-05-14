@@ -2029,7 +2029,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       form: new vform__WEBPACK_IMPORTED_MODULE_0___default.a({
-        id: '',
+        no_redirect_json_return: true,
         email: '',
         password: ''
       })
@@ -2046,7 +2046,7 @@ __webpack_require__.r(__webpack_exports__);
       this.form.post('/login').then(function (_ref) {
         var data = _ref.data;
 
-        _this.$emit('userResponse', data);
+        _this.$emit('userDataFromServer', data);
       })["catch"](function (e) {
         console.log(e);
       });
@@ -2232,6 +2232,12 @@ __webpack_require__.r(__webpack_exports__);
     moveRegisterMode: function moveRegisterMode() {
       this.LoginMode = false;
       this.RegisterMode = true;
+    },
+    userDataFromServer: function userDataFromServer(data) {
+      this.userData = data;
+      this.LoginMode = false;
+      this.RegisterMode = false;
+      this.is_logged_in = true;
     },
     userResponse: function userResponse(data) {
       this.userData = data;
@@ -4919,10 +4925,6 @@ var render = function() {
           _vm._v(" "),
           _c("AlertError", { attrs: { form: _vm.form } }),
           _vm._v(" "),
-          _c("input", {
-            attrs: { type: "hidden", name: "no_redirect_json_return" }
-          }),
-          _vm._v(" "),
           _c("div", { staticClass: "form-group" }, [
             _c("label", { attrs: { for: "email" } }, [_vm._v("Email")]),
             _vm._v(" "),
@@ -5264,7 +5266,7 @@ var render = function() {
                 _c("p", { staticClass: "alert alert-success" }, [
                   _vm._v('Thank you mr "'),
                   _c("b", [_vm._v(_vm._s(_vm.userData.name))]),
-                  _vm._v('".you are now registered. you can now order product')
+                  _vm._v('".you are now logged in & you can now order product')
                 ]),
                 _vm._v(" "),
                 _c("h4", [_vm._v("Login details for future login")]),
@@ -5292,7 +5294,10 @@ var render = function() {
           _vm._v(" "),
           _vm.LoginMode
             ? _c("login-component", {
-                on: { moveRegisterMode: _vm.moveRegisterMode }
+                on: {
+                  userDataFromServer: _vm.userDataFromServer,
+                  moveRegisterMode: _vm.moveRegisterMode
+                }
               })
             : _vm._e()
         ],

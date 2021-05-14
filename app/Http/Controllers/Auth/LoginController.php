@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -41,6 +42,27 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+
+
+    protected function sendLoginResponse(Request $request)
+    {
+
+        $request->session()->regenerate();
+        $this->clearLoginAttempts($request);
+
+        if(isset($request->no_redirect_json_return)){
+            return $this->guard()->user();
+        }
+
+        if ($response = $this->authenticated($request, $this->guard()->user())) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+                    ? new JsonResponse($response, 204)
+                    : redirect()->intended($this->redirectPath());
     }
 
     /**

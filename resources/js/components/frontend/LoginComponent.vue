@@ -6,7 +6,7 @@
                  
                   <AlertError :form="form" />
 
-                <input type="hidden" name="no_redirect_json_return">
+                
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input name="email" :class="{'is-invalid': form.errors.has('email')}" id="email" v-model="form.email" type="text" class="form-control" placeholder="Enter your email">
@@ -40,7 +40,7 @@ export default {
     data(){
         return {
             form: new Form({
-                id: '',
+                no_redirect_json_return: true,
                 email: '',
                 password: '',
             })
@@ -54,7 +54,7 @@ export default {
             this.form.busy = true;
             this.form.post('/login')
             .then(({data}) => {
-                this.$emit('userResponse',data);
+                this.$emit('userDataFromServer',data);
             })  
             .catch( e => {
                 console.log(e);

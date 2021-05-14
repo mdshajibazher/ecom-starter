@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\Collection;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class FrontendController extends Controller
 {
     public function Home(){
+        // $collections = Collection::all();
         $products = Product::with('images','Subcollections')->get();
         return view('frontend.pages.home',compact('products'));
     }
@@ -60,6 +62,6 @@ class FrontendController extends Controller
         if(Auth::check()){
            return  Cart::with('Product','Product.images','ProductVariantPrice.variant_one','ProductVariantPrice.variant_two','ProductVariantPrice.variant_three')->where('user_id',Auth::user()->id)->get();
         }
-        abort(403);
+        return [];
     }
 }

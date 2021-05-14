@@ -55,7 +55,7 @@
 							</div>
 							<div class="form-group">
 								<div v-if="Object.keys(this.userData).length> 0">
-									<p class="alert alert-success">Thank you mr "<b>{{userData.name}}</b>".you are now registered. you can now order product</p>
+									<p class="alert alert-success">Thank you mr "<b>{{userData.name}}</b>".you are now logged in & you can now order product</p>
 									<h4>Login details for future login</h4>
 									<table class="table table-bordered">
 										<tr>
@@ -69,7 +69,7 @@
 									</table>
 								</div>
 								<register-component @userResponse="userResponse" @moveloginMode="moveloginMode" v-if="RegisterMode"/>
-								<login-component @moveRegisterMode="moveRegisterMode" v-if="LoginMode"/>
+								<login-component @userDataFromServer="userDataFromServer" @moveRegisterMode="moveRegisterMode" v-if="LoginMode"/>
 							</div>
 							
 							<div class="card product-meta mb-0">
@@ -166,6 +166,12 @@ export default {
 			this.LoginMode = false;
 			this.RegisterMode = true;
 			
+		},
+		userDataFromServer(data){
+			this.userData = data;
+			this.LoginMode = false;
+			this.RegisterMode = false;
+			this.is_logged_in = true;
 		},
 
 		userResponse(data){

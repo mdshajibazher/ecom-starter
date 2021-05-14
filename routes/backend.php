@@ -28,7 +28,7 @@ use App\Http\Controllers\Backend\SubcollectionController;
 */
 
 
-// Route::middleware([checkAdmin::class])->group(function () {
+Route::middleware([checkAdmin::class])->group(function () {
 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -108,4 +108,4 @@ Route::group(['as' => 'settings.', 'prefix' => 'settings'], function () {
 
 });
 
-// });
+});
