@@ -17,6 +17,10 @@
                     <input :class="{'is-invalid': form.errors.has('password')}" name="password" id="password" v-model="form.password" type="password" class="form-control" placeholder="Enter your password">
                       <small v-if="form.errors.has('password')" class="form-error text-danger">{{form.errors.get('password')}} </small>
                 </div>
+                <div class="form-group form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="top-login-checkbox" name="remember" v-model="form.remember">
+                    <label class="form-check-label" for="top-login-checkbox">Remember Me</label>
+                </div>
                 <div class="form-group">
                     <button :disabled="form.busy" type="submit" class="btn btn-success">LOGIN</button>
                 </div>
@@ -43,6 +47,7 @@ export default {
                 no_redirect_json_return: true,
                 email: '',
                 password: '',
+                remember: false,
             })
         }
     },
@@ -55,6 +60,7 @@ export default {
             this.form.post('/login')
             .then(({data}) => {
                 this.$emit('userDataFromServer',data);
+                this.$store.dispatch('isLoggedIn');
             })  
             .catch( e => {
                 console.log(e);

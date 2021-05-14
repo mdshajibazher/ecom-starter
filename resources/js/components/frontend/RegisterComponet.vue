@@ -75,6 +75,7 @@ export default {
             this.form.post('/register')
             .then(({data}) => {
                 this.$emit('userResponse',data);
+                this.$store.dispatch('isLoggedIn');
             })  
             .catch( e => {
                 console.log(e);

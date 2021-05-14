@@ -14,6 +14,7 @@ import store from './store';
  Vue.component('ProductDetail', require('./components/frontend/ProductDetail').default);
  Vue.component('CartComponent', require('./components/frontend/CartComponent').default);
  Vue.component('RegisterLarge', require('./components/frontend/RegisterLarge').default);
+ Vue.component('TopLinks', require('./components/frontend/TopLinks').default);
 
 
  const app = new Vue({

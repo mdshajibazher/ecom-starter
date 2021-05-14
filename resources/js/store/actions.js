@@ -54,6 +54,22 @@ export const getCartItem = ({commit}) => {
 }
 
 
+export const isLoggedIn = ({commit}) => {
+    axios.get('/is_logged_in')
+    .then(({data}) => {
+        if(data == true){
+            commit('IS_LOGGED_IN',true);
+        }
+    })
+    .catch(e => {
+        iziToast.error({
+            title: 'Error',
+            position: 'topRight',
+            message: e.response.data.message,
+        });
+    })
+}
+
 export const removeProductFromCart = ({commit},product_variant_price_id) => {
    
     axios.delete('/remove_cart_item/'+product_variant_price_id)

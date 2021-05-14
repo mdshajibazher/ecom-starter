@@ -24,6 +24,10 @@ export const SET_CART = (state, cartItems) => {
     state.cart = cartItems;
 }
 
+export const IS_LOGGED_IN = (state, status) => {
+    state.is_logged_in = status;
+}
+
 export const REMOVE_PRODUCT_FROM_CART = (state, product_variant_price_id) => {
     state.cart = state.cart.filter( item => {
         return item.product_variant_price.id !== product_variant_price_id;
