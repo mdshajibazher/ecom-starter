@@ -5,17 +5,32 @@ export const ADD_TO_CART = (state,{product,qty,product_variant_price}) => {
 
     if(product_in_cart){
         product_in_cart.qty += qty;
+        iziToast.success({
+            title: 'Success',
+             position: 'topRight',
+            message: 'Product Qunatity Incremented',
+        });
         return;
     }
     state.cart.push({product,qty,product_variant_price})
+    iziToast.success({
+        title: 'Success',
+         position: 'topRight',
+        message: 'Product successfully added to cart',
+    });
 }
 
 export const SET_CART = (state, cartItems) => {
     state.cart = cartItems;
 }
 
-export const REMOVE_PRODUCT_FROM_CART = (state, product) => {
-    // state.cart = state.cart.filter( item => {
-    //     return item.product.id !== product.id
-    // })
+export const REMOVE_PRODUCT_FROM_CART = (state, product_variant_price_id) => {
+    state.cart = state.cart.filter( item => {
+        return item.product_variant_price.id !== product_variant_price_id;
+    })
+    iziToast.success({
+        title: 'Success',
+         position: 'topRight',
+        message: 'Product successfully removed from cart',
+    });
 }

@@ -1,15 +1,26 @@
 <template>
           <div class="row">
             <div class="col-md-12 col-lg-12">
+                <form @submit.prevent="Login" @keydown="form.onKeydown($event)" style="display:inline">
                 <div class="alert alert-warning"> Please login here before add any product. Not a Member <a @click="$emit('moveRegisterMode',1)" href="javascript:void(0)" > <b>	Click Here </b> </a> to Register </div>
+                 
+                  <AlertError :form="form" />
+
+                <input type="hidden" name="no_redirect_json_return">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="text" class="form-control" placeholder="Enter your email">
+                    <input name="email" :class="{'is-invalid': form.errors.has('email')}" id="email" v-model="form.email" type="text" class="form-control" placeholder="Enter your email">
+                     <small v-if="form.errors.has('email')" class="form-error text-danger">{{form.errors.get('email')}} </small>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="text" class="form-control" placeholder="Enter your password">
+                    <input :class="{'is-invalid': form.errors.has('password')}" name="password" id="password" v-model="form.password" type="password" class="form-control" placeholder="Enter your password">
+                      <small v-if="form.errors.has('password')" class="form-error text-danger">{{form.errors.get('password')}} </small>
                 </div>
+                <div class="form-group">
+                    <button :disabled="form.busy" type="submit" class="btn btn-success">LOGIN</button>
+                </div>
+                </form>
             </div>
 
             <div class="line line-sm"></div>
@@ -23,8 +34,34 @@
 </template>
 
 <script>
+import Form from 'vform';
+import { AlertError } from 'vform';
 export default {
-
+    data(){
+        return {
+            form: new Form({
+                id: '',
+                email: '',
+                password: '',
+            })
+        }
+    },
+    components:{
+        AlertError
+    },
+    methods:{
+        Login(){
+            this.form.busy = true;
+            this.form.post('/login')
+            .then(({data}) => {
+                this.$emit('userResponse',data);
+            })  
+            .catch( e => {
+                console.log(e);
+            })
+        }
+    
+    }
 }
 </script>
 

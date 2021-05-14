@@ -15,9 +15,24 @@
 										<table class="table table-borderless table-sm">
 											<tr>
 												<td>Variation: </td>
-												<td>{{price.variant_one==null?'':price.variant_one.variant+'/' }} 
-                                        {{price.variant_two==null?'':price.variant_two.variant+'/' }}
-                                        {{price.variant_three==null?'':price.variant_three.variant+'/' }}</td>
+												<td>
+													<table class="table table-bordered table-sm table-light">
+														<tr v-if="price.variant_one!=null">
+															<th>{{price.variant_one.variant_label.title}} : </th>
+															<td> {{price.variant_one.variant.toUpperCase()}}</td>
+														</tr>
+
+														<tr v-if="price.variant_two!=null">
+															<th>{{price.variant_two.variant_label.title}} : </th>
+															<td>{{price.variant_two.variant.toUpperCase()}}</td>
+														</tr>
+
+														<tr v-if="price.variant_three!=null">
+															<th>{{price.variant_three.variant_label.title}} : </th>
+															<td>{{price.variant_three.variant.toUpperCase()}}</td>
+														</tr>
+													</table>
+                                                </td>
 											</tr>
 											<tr>
 												<td>Price: </td>
@@ -29,7 +44,7 @@
 											</tr>
 											<tr v-if="price.stock >0">
 												<td>Action</td>
-												<td><button @click="addToCart(productDetails,price)" type="submit" class="atc btn btn-success btn-sm"><i class="icon-shopping-basket"></i> Add to Cart</button></td>
+												<td><button @click="addToCart(productDetails,price)" :class="{ loading: buttonLoader ==  price.id}" type="submit" class="atc"><i class="icon-shopping-basket"></i> Add To Cart</button></td>
 											</tr>
 										</table>
 										</td>
@@ -102,6 +117,7 @@ export default {
 			is_logged_in : false,
 			LoginMode: false,
 			RegisterMode: false,
+			buttonLoader: "",
         }
     },
     props: ['postTitle'],
@@ -111,17 +127,20 @@ export default {
 	},
     methods: {
 		addToCart(product,product_variant_price){
+			this.buttonLoader = product_variant_price.id;
 			axios.get('/is_logged_in')
 			.then(({data}) => {
 				if(data == true){
+					this.buttonLoader = "";
 					this.$store.dispatch('addProductToCart',{
 					product,
 					qty: 1,
 					product_variant_price,
 					})
+					// this.buttonLoader = false;
 				}else{
 					this.RegisterMode = true;
-					
+					this.buttonLoader = "";
 					iziToast.warning({
 						title: 'Warning',
 						 position: 'topRight',
@@ -130,6 +149,7 @@ export default {
 				}
 			})
 			.catch(e => {
+				this.buttonLoader = "";
 				iziToast.error({
 					title: 'Error',
 					position: 'topRight',
@@ -166,3 +186,53 @@ export default {
 }
 </script>
 
+<style scoped>
+.atc {
+    display: inline-block;
+    border: 0;
+    outline: 0;
+    padding: 3px 10px;
+    line-height: 1.4;
+    background: linear-gradient(#44bc9c,#079992);
+    border-radius: 5px;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
+    color: white !important;
+    font-size: 1.2em;
+    cursor: pointer;
+    /* Important part */
+    position: relative;
+    transition: padding-right .3s ease-out;
+}
+.atc.loading {
+    background-color: #CCC;
+    padding-right: 40px;
+}
+.atc.loading:after {
+    content: "";
+    position: absolute;
+    border-radius: 100%;
+    right: 6px;
+    top: 50%;
+    width: 0px;
+    height: 0px;
+    margin-top: -2px;
+    border: 4px solid rgba(255,255,255,0.5);
+    border-left-color: #FFF;
+    border-top-color: #FFF;
+    animation: spin .6s infinite linear, grow .3s forwards ease-out;
+}
+@keyframes spin { 
+    to {
+        transform: rotate(359deg);
+    }
+}
+@keyframes grow { 
+    to {
+        width: 16px;
+        height: 16px;
+        margin-top: -8px;
+        right: 13px;
+    }
+}
+
+</style>

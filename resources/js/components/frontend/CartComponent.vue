@@ -5,6 +5,7 @@
             <div class="top-cart-title">
                 <h4>Shopping Cart</h4>
             </div>
+            <div v-if="totalcart > 0">
             <div class="top-cart-items">
                 <div class="top-cart-item" v-for="(item,index) in cart"  :key="index">
                     <div class="top-cart-item-image">
@@ -13,15 +14,30 @@
                     <div class="top-cart-item-desc">
                         <div class="top-cart-item-desc-title">
                             <a href="#">{{item.product.title}}</a>
-                            <span class="top-cart-item-price d-block">Tk. {{item.product_variant_price.price}}</span>
+                              <span class="top-cart-item-price d-block text-uppercase">
+                                 <span v-if="item.product_variant_price.variant_one" class="badge badge-dark mb-0">{{ item.product_variant_price.variant_one.variant}} </span>
+                                 <span v-if="item.product_variant_price.variant_two" class="badge badge-primary mb-0">
+                                 {{item.product_variant_price.variant_two.variant}} </span>
+                                 <span v-if="item.product_variant_price.variant_three" class="badge badge-info mb-0" >
+                                 {{item.product_variant_price.variant_three.variant}}
+                                 </span>
+                              </span>
+                            <span class="top-cart-item-price d-block">{{item.product_variant_price.price}} x {{item.qty}} = {{item.product_variant_price.price*item.qty}} Tk. </span>
                         </div>
-                        <div class="top-cart-item-quantity">x {{item.qty}}</div>
+                        <div class="top-cart-item-quantity">
+                          <button @click.prevent="removeProductFromCart(item.product_variant_price.id)" type="button" class="btn btn-sm btn-danger">x</button> 
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="top-cart-action">
                 <span class="top-checkout-price">Tk. {{totalprice}}</span>
                 <a href="#" class="button button-3d button-small m-0">View Cart</a>
+            </div>
+            </div>
+
+            <div v-else class="top-cart-items">
+                <p class="alert alert-danger">! No items </p>
             </div>
         </div>
 </div>
@@ -32,7 +48,11 @@ export default {
     mounted(){
         this.$store.dispatch('getCartItem');
     },
-
+    methods:{
+        removeProductFromCart(product_variant_price_id){
+            this.$store.dispatch('removeProductFromCart',product_variant_price_id)
+        }
+    },
     computed: {
         cart(){
             return this.$store.state.cart
@@ -47,6 +67,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.top-cart-item-image{
+    width: 64px;
+    height: 64px;
+}
+.top-cart-item-image a, .top-cart-item-image img{
+        width: 60px;
+    height: 60px;
 
+}
 </style>

@@ -16,7 +16,7 @@ class FrontendController extends Controller
     }
 
     public function ProductDetails($id){
-        $products = Product::with('variants','productvariants','prices.variant_one','prices.variant_two','prices.variant_three','images','Subcollections','collection')->findOrFail($id);
+        $products = Product::with('variants','productvariants','prices.variant_one.variantLabel','prices.variant_two.variantLabel','prices.variant_three.variantLabel','images','Subcollections','collection')->findOrFail($id);
         $is_loggedin = Auth::check();
         return ['products' => $products,'is_logged_in' => $is_loggedin];
     }
@@ -44,14 +44,22 @@ class FrontendController extends Controller
             return $cart;
 
         }
-        abort(401);
+        abort(403);
 
     }
 
+    public function removeCartItem($product_variant_price_id){
+        if(Auth::check()){
+            $remove_item =  Cart::where('user_id',Auth::user()->id)->where('product_variant_price_id', $product_variant_price_id)->delete();
+            return $remove_item;
+         }
+         return [];
+    }
 
     public function getCartItems(){
         if(Auth::check()){
-           return  Cart::with('Product','Product.images','ProductVariantPrice')->where('user_id',Auth::user()->id)->get();
+           return  Cart::with('Product','Product.images','ProductVariantPrice.variant_one','ProductVariantPrice.variant_two','ProductVariantPrice.variant_three')->where('user_id',Auth::user()->id)->get();
         }
+        abort(403);
     }
 }

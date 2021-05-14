@@ -44,10 +44,29 @@ export const getCartItem = ({commit}) => {
     .then((response) => {
         commit('SET_CART',response.data);
     })
+    .catch(e => {
+        iziToast.error({
+            title: 'Error',
+            position: 'topRight',
+            message: e.response.data.message,
+        });
+    })
 }
 
 
-export const removeProductFromCart = ({commit},product) => {
-    // commit('REMOVE_PRODUCT_FROM_CART',product)
-    // axios.delete('http://ecom-api.test/api/cart/'+product.id)
+export const removeProductFromCart = ({commit},product_variant_price_id) => {
+   
+    axios.delete('/remove_cart_item/'+product_variant_price_id)
+    .then((res) => {
+        if(res.status == 200){
+            commit('REMOVE_PRODUCT_FROM_CART',product_variant_price_id)
+        }
+    })
+    .catch(e => {
+        iziToast.error({
+            title: 'Error',
+            position: 'topRight',
+            message: e.response.data.message,
+        });
+    })
 }

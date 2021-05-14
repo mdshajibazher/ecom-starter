@@ -4,8 +4,10 @@ export const CartItemCount = (state) => {
 
 export const CartTotalPrice = (state) => {
     let total = 0;
-    state.cart.forEach((item) => {
-        total += parseFloat(item.product_variant_price.price) * parseFloat(item.qty);
-    });
+    // if(state.cart){
+        state.cart.forEach((item) => {
+            total += parseFloat(item.product_variant_price.price) * parseFloat(item.qty);
+        });
+    // }
     return total;
 }
