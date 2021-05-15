@@ -73,9 +73,13 @@ export default {
             .then(res => {
                 console.log(res)
             })  
-            .catch( e => {
-                console.log(e);
-            })
+            .catch(e => {
+				iziToast.error({
+					title: 'Error',
+					position: 'topRight',
+					message: e.response.data.message,
+				});
+			})
         }
     }
 }

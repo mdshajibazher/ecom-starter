@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Auth;
 class FrontendController extends Controller
 {
     public function Home(){
-        // $collections = Collection::all();
+        $collections = Collection::all();
         $products = Product::with('images','Subcollections')->get();
-        return view('frontend.pages.home',compact('products'));
+        return view('frontend.pages.home',compact('products','collections'));
     }
 
     public function ProductDetails($id){

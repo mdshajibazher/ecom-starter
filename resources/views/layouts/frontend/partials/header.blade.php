@@ -1,26 +1,30 @@
-		<!-- Header
+			<!-- Header
 		============================================= -->
-		<header id="header" class="transparent-header floating-header header-size-md">
+		<header id="header" class="full-header header-size-md">
 			<div id="header-wrap">
 				<div class="container">
-					<div class="header-row">
+					<div class="header-row justify-content-lg-between">
 
 						<!-- Logo
 						============================================= -->
-						<div id="logo">
-							<a href="index.html" class="standard-logo" data-dark-logo="{{asset('frontend/images/logo-dark.png')}}"><img src="{{asset('frontend/images/logo.png')}}" alt="Canvas Logo"></a>
-							<a href="index.html" class="retina-logo" data-dark-logo="{{asset('frontend/images/logo-dark@2x.png')}}"><img src="{{asset('frontend/images/logo@2x.png')}}" alt="Canvas Logo"></a>
+						<div id="logo" class="mr-lg-4">
+							<a href="demo-shop.html" class="standard-logo"><img src="{{asset('frontend/demos/shop/images/logo.png')}}" alt="Canvas Logo"></a>
+							<a href="demo-shop.html" class="retina-logo"><img src="{{asset('frontend/demos/shop/images/logo@2x.png')}}" alt="Canvas Logo"></a>
 						</div><!-- #logo end -->
 
 						<div class="header-misc">
 
 							<!-- Top Search
 							============================================= -->
+
+
+							<cart-component/>
+
+							<!-- Top Search
+							============================================= -->
 							<div id="top-search" class="header-misc-icon">
 								<a href="#" id="top-search-trigger"><i class="icon-line-search"></i><i class="icon-line-cross"></i></a>
 							</div><!-- #top-search end -->
-
-							<cart-component></cart-component>
 
 						</div>
 
@@ -30,90 +34,48 @@
 
 						<!-- Primary Navigation
 						============================================= -->
-						<nav class="primary-menu with-arrows">
+						<nav class="primary-menu with-arrows mr-lg-auto">
 
 							<ul class="menu-container">
-								<li class="menu-item current"><a class="menu-link" href="demo-seo.html"><div>Home</div></a></li>
-								<li class="menu-item"><a class="menu-link" href="demo-seo-about.html"><div>What We Do</div></a></li>
-								<li class="menu-item mega-menu"><div class="menu-link"><div>Services</div></div>
-									<div class="mega-menu-content mega-menu-style-2 px-0">
+								<li class="menu-item current"><a class="menu-link" href="#"><div>Home</div></a></li>
+
+								@php
+									$collections =\App\Models\Collection::with('Subcollections.Label')->limit(2)->get();
+								@endphp
+								@foreach ($collections as $collection)
+								@php
+								$subcollection_chunk = $collection->Subcollections->groupBy('label_id');
+								@endphp
+								<li class="menu-item mega-menu"><a class="menu-link" href="#"><div>{{$collection->title}}</div></a>
+									<div class="mega-menu-content mega-menu-style-2">
 										<div class="container">
 											<div class="row">
-												<a href="demo-seo-optimizations.html" class="mega-menu-column sub-menu-container col-lg-4 border-bottom h-bg-light py-4">
-													<div class="feature-box">
-														<div class="fbox-icon mb-2">
-															<img src="{{asset('frontend/demos/seo/images/icons/seo.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0">
-														</div>
-														<div class="fbox-content">
-															<h3 class="nott ls0">Seo Optimization</h3>
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, ipsa!</p>
-														</div>
-													</div>
-												</a>
-												<a href="demo-seo-social.html" class="mega-menu-column sub-menu-container col-lg-4 border-bottom h-bg-light py-4">
-													<div class="feature-box">
-														<div class="fbox-icon mb-2">
-															<img src="demos/seo/images/icons/social.svg" alt="Feature Icon" class="bg-transparent rounded-0">
-														</div>
-														<div class="fbox-content">
-															<h3 class="nott ls0">Social Media Marketing</h3>
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, ipsa!</p>
-														</div>
-													</div>
-												</a>
-												<a href="demo-seo-adwords.html" class="mega-menu-column sub-menu-container col-lg-4 border-bottom h-bg-light py-4">
-													<div class="feature-box">
-														<div class="fbox-icon mb-2">
-															<img src="{{asset('frontend/demos/seo/images/icons/adword.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0">
-														</div>
-														<div class="fbox-content">
-															<h3 class="nott ls0">Adwords Campaign</h3>
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, ipsa!</p>
-														</div>
-													</div>
-												</a>
-												<a href="demo-seo-experience.html" class="mega-menu-column sub-menu-container col-lg-4 border-bottom h-bg-light py-4">
-													<div class="feature-box">
-														<div class="fbox-icon mb-2">
-															<img src="{{asset('frontend/demos/seo/images/icons/experience.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0">
-														</div>
-														<div class="fbox-content">
-															<h3 class="nott ls0">Customer Experience</h3>
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, ipsa!</p>
-														</div>
-													</div>
-												</a>
-												<a href="demo-seo-analysis.html" class="mega-menu-column sub-menu-container col-lg-4 border-bottom h-bg-light py-4">
-													<div class="feature-box">
-														<div class="fbox-icon mb-2">
-															<img src="{{asset('frontend/demos/seo/images/icons/analysis.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0">
-														</div>
-														<div class="fbox-content">
-															<h3 class="nott ls0">Digital Analysis</h3>
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, ipsa!</p>
-														</div>
-													</div>
-												</a>
-												<a href="demo-seo-content-marketing.html" class="mega-menu-column sub-menu-container col-lg-4 border-bottom h-bg-light py-4">
-													<div class="feature-box">
-														<div class="fbox-icon mb-2">
-															<img src="{{asset('frontend/demos/seo/images/icons/content_marketing.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0">
-														</div>
-														<div class="fbox-content">
-															<h3 class="nott ls0">Content Marketing</h3>
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, ipsa!</p>
-														</div>
-													</div>
-												</a>
-												<div class="mega-menu-column sub-menu-container col-12 p-0">
-													<a href="demo-seo-about.html" class="button button-rounded button-large nott ls0 btn-block text-center m-0 rounded-0 py-3 button-light ">View All <i class="icon-line-arrow-right"></i></a>
-												</div>
+												@foreach ($subcollection_chunk as $label_id => $chunk_array)
+												<ul class="sub-menu-container mega-menu-column border-left-0 col-lg-3">
+
+
+													<li class="menu-item mega-menu-title"><a class="menu-link" href="#"><div>{{\App\Models\Label::find($label_id)->title}}</div></a>
+														<ul class="sub-menu-container">
+															@foreach ($chunk_array as $sub)
+															<li class="menu-item"><a class="menu-link" href="#"><div>{{$sub->title}}</div></a></li>
+															@endforeach
+	
+															<li class="menu-item"><a class="menu-link" href="#"><div>Show all <i class="icon-angle-right"></i></div></a></li>
+														</ul>
+													</li>
+												</ul>
+												@endforeach
+												<ul class="sub-menu-container mega-menu-column col-lg-3 border-left-0">
+													<li class="card p-0 bg-transparent border-0">
+														<img class="card-img-top" src="{{asset('images/collections/original/'.$collection->image)}}" alt="image cap">
+										
+													</li>
+												</ul>
 											</div>
 										</div>
 									</div>
 								</li>
-								<li class="menu-item"><a class="menu-link" href="demo-seo-faqs.html"><div>FAQs</div></a></li>
-								<li class="menu-item"><a class="menu-link" href="demo-seo-contact.html"><div>Contact</div></a></li>
+								@endforeach
 							</ul>
 
 						</nav><!-- #primary-menu end -->
@@ -127,3 +89,4 @@
 			</div>
 			<div class="header-wrap-clone"></div>
 		</header><!-- #header end -->
+	

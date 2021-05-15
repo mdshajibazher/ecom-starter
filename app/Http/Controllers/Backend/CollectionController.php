@@ -7,6 +7,7 @@ use App\Models\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Subcollection;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
@@ -113,8 +114,15 @@ class CollectionController extends Controller
         foreach($request->sub_collection as $sub){
          $subcol_id[] = ['collection_id'=> $collection->id, 'subcollection_id' =>$sub['id']];   
         }
-
-        $collection->Subcollections()->sync($subcol_id);
+        DB::beginTransaction();
+        try {
+            $collection->Subcollections()->detach();
+            $collection->Subcollections()->attach($subcol_id);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+    
         return $collection;
   
     }

@@ -1,5 +1,5 @@
 <template>
-  <a @click="ProductDetails()" href="javascript:void(0)" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i> Quick View</a>
+  <a @click="ProductDetails()" href="javascript:void(0)" class="btn btn-success mr-2"><i class="icon-line-expand"></i> QUICK VIEW</a>
 </template>
 
 <script>

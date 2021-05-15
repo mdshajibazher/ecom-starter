@@ -77,9 +77,13 @@ export default {
                 this.$emit('userResponse',data);
                 this.$store.dispatch('isLoggedIn');
             })  
-            .catch( e => {
-                console.log(e);
-            })
+            .catch(e => {
+				iziToast.error({
+					title: 'Error',
+					position: 'topRight',
+					message: e.response.data.message,
+				});
+			})
         }
     }
 }

@@ -4,7 +4,7 @@
 
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="author" content="SemiColonWeb" />
-
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	
     <!-- Styles -->
     <link href="{{ asset('css/frontend.css') }}" rel="stylesheet">
@@ -21,7 +21,8 @@
 	============================================= -->
 	<div id="vue-app" class="clearfix">
 
-
+		@yield('onload-modal')
+		
 		@include('layouts.frontend.partials.top-bar')
 
 		@include('layouts.frontend.partials.header')

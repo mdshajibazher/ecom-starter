@@ -2302,6 +2302,8 @@ __webpack_require__.r(__webpack_exports__);
     getSubCollectionbyId: function getSubCollectionbyId() {
       var _this = this;
 
+      this.sub_collections = "";
+
       if (this.collection == null) {
         this.subcollections_options = [];
       } else {

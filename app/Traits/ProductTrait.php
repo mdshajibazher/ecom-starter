@@ -49,7 +49,8 @@ trait ProductTrait{
          $subcol_id[] = ['product_id'=> $product->id, 'subcollection_id' =>$sub['id']];   
         }
 
-        $product->Subcollections()->sync($subcol_id);
+        $product->Subcollections()->detach();
+        $product->Subcollections()->attach($subcol_id);
     }
 
     public function insertProductVariant($request,$product_id,$id=null)

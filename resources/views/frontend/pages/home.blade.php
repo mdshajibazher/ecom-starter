@@ -5,6 +5,35 @@
 @include('layouts.frontend.partials.slider')
 @endsection
 
+@section('onload-modal')
+{{-- <div class="modal-on-load" data-target="#myModal1"></div> --}}
+
+<!-- On LOad Modal -->
+<div class="modal1 mfp-hide subscribe-widget mx-auto" id="myModal1" style="max-width: 750px;">
+	<div class="row justify-content-center bg-white align-items-center" style="min-height: 380px;">
+		<div class="col-md-5 p-0">
+			<div style="background: url('{{asset('frontend/images/modals/modal1.jpg')}}') no-repeat center right; background-size: cover;  min-height: 380px;"></div>
+		</div>
+		<div class="col-md-7 bg-white p-4">
+			<div class="heading-block border-bottom-0 mb-3">
+				<h3 class="font-secondary nott ">Join Our Newsletter &amp; Get <span class="text-danger">40%</span> Off your First Order</h3>
+				<span>Get Latest Fashion Updates &amp; Offers</span>
+			</div>
+			<div class="widget-subscribe-form-result"></div>
+			<form class="widget-subscribe-form2 mb-2" action="include/subscribe.php" method="post">
+				<input type="email" id="widget-subscribe-form2-email" name="widget-subscribe-form-email" class="form-control required email" placeholder="Enter your Email Address..">
+				<div class="d-flex justify-content-between align-items-center mt-1">
+					<button class="button button-dark  bg-dark text-white ml-0" type="submit">Subscribe</button>
+					<a href="#" class="btn-link" onClick="$.magnificPopup.close();return false;">Don't Show me</a>
+				</div>
+			</form>
+			<small class="mb-0 font-italic text-black-50">*We also hate Spam &amp; Junk Emails.</small>
+		</div>
+	</div>
+</div>
+
+@endsection
+
 @section('modal')
 <!-- Modal -->
 <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
@@ -31,12 +60,32 @@
 @endsection
 
 @section('content')
-<div class="content-wrap pt-0">
-	
-	
+<div class="content-wrap">
+	<div class="container clearfix">
+							<!-- Shop Categories
+					============================================= -->
+					<div class="fancy-title title-border title-center mb-4">
+						<h4>Shop popular categories</h4>
+					</div>
 
+					<div class="row shop-categories clearfix">
+						@foreach ($collections as $collection)
+						@if($collection->image != null)
+						<div class="col-lg-4">
+							<a href="#" style="background: url('{{asset('images/collections/resized/'.$collection->image)}}') no-repeat center center; background-size: cover;">
+								<div class="vertical-middle dark center">
+									<div class="heading-block m-0 border-0">
+										<h3 class="nott font-weight-semibold ls0">{{$collection->title}}</h3>
+										<small class="button bg-white text-dark button-light button-mini">Shop Now</small>
+									</div>
+								</div>
+							</a>
+						</div>
+						@endif
+						@endforeach
+					</div>
 
-
+	</div>
 	<div class="content-wrap">
 		<div class="container clearfix">
 
@@ -81,582 +130,630 @@
 		</div>
 	</div>
 
-	<!-- Features
-	============================================= -->
-	<div class="section bg-transparent mt-4 mb-0 pb-0">
-		<div class="container">
-			<div class="heading-block border-bottom-0 center mx-auto mb-0" style="max-width: 550px">
-				<div class="badge badge-pill badge-default">Services</div>
-				<h3 class="nott ls0 mb-3">What We Do</h3>
-				<p>Dynamically provide access to resource-leveling mindshare vis-a-vis bricks-and-clicks ideas authoritatively.</p>
-			</div>
-			<div class="row justify-content-between align-items-center">
-
-				<div class="col-lg-4 col-sm-6">
-
-					<div class="feature-box flex-md-row-reverse text-md-right border-0">
-						<div class="fbox-icon">
-							<a href="#"><img src="{{asset('frontend/demos/seo/images/icons/seo.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0"></a>
-						</div>
-						<div class="fbox-content">
-							<h3 class="nott ls0">SEO optimization</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum, dolore, voluptates!</p>
-						</div>
-					</div>
-
-					<div class="feature-box flex-md-row-reverse text-md-right border-0 mt-5">
-						<div class="fbox-icon">
-							<a href="#"><img src="{{asset('frontend/demos/seo/images/icons/adword.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0"></a>
-						</div>
-						<div class="fbox-content">
-							<h3 class="nott ls0">Adwords Campaign</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, provident.</p>
-						</div>
-					</div>
-
-					<div class="feature-box flex-md-row-reverse text-md-right border-0 mt-5">
-						<div class="fbox-icon">
-							<a href="#"><img src="{{asset('frontend/demos/seo/images/icons/analysis.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0"></a>
-						</div>
-						<div class="fbox-content">
-							<h3 class="nott ls0">Digital Analysis</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, ipsa!</p>
-						</div>
-					</div>
-
-				</div>
-
-				<div class="col-lg-3 col-7 offset-3 offset-sm-0 d-sm-none d-lg-block center my-5">
-					<img src="{{asset('frontend/demos/seo/images/sections/2.png')}}" alt="iphone" class="rounded  parallax" data-bottom-top="transform: translateY(-30px)" data-top-bottom="transform: translateY(30px)">
-				</div>
-
-				<div class="col-lg-4 col-sm-6">
-
-					<div class="feature-box border-0">
-						<div class="fbox-icon">
-							<a href="#"><img src="{{asset('frontend/demos/seo/images/icons/social.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0"></a>
-						</div>
-						<div class="fbox-content">
-							<h3 class="nott ls0">Social Media Marketing</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum, dolore, voluptates!</p>
-						</div>
-					</div>
-
-					<div class="feature-box border-0 mt-5">
-						<div class="fbox-icon">
-							<a href="#"><img src="{{asset('frontend/demos/seo/images/icons/experience.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0"></a>
-						</div>
-						<div class="fbox-content">
-							<h3 class="nott ls0">Customer Experience</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, ipsa!</p>
-						</div>
-					</div>
-
-					<div class="feature-box border-0 mt-5">
-						<div class="fbox-icon">
-							<a href="#"><img src="{{asset('frontend/demos/seo/images/icons/content_marketing.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0"></a>
-						</div>
-						<div class="fbox-content">
-							<h3 class="nott ls0">Content Marketing</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, provident.</p>
-						</div>
-					</div>
-
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-	<!-- Pricing
-	============================================= -->
-	<div class="section m-0" style="background: url('{{asset('frontend/demos/seo/images/sections/4.png')}}') no-repeat center top; background-size: cover; padding: 140px 0 0;">
-		<div class="container">
-			<div class="row justify-content-between">
-				<div class="col-lg-4 mt-4">
-					<div class="heading-block border-bottom-0 bottommargin-sm">
-						<div class="badge badge-pill badge-default">Pricing Table</div>
-						<h3 class="nott ls0">No Hidden Charges. <br>Choose Your Best Plan.</h3>
-					</div>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolore voluptatem assumenda quae possimus sunt dignissimos tempora officia.</p>
-					<div class="pricing-tenure-switcher d-flex align-items-center mb-4 position-relative" data-container="#pricing-switch">
-						<span class="pts-left font-weight-bold text-muted">Monthly</span>
-						<div class="pts-switcher mx-3">
-							<div class="switch">
-								<input id="switch-toggle-pricing-tenure" class="switch-toggle switch-toggle-round" type="checkbox">
-								<label for="switch-toggle-pricing-tenure" class="mb-0"></label>
+					<!-- New Arrival Section
+				============================================= -->
+				<div class="section my-4">
+					<div class="container">
+						<div class="row align-items-stretch">
+							<div class="col-md-5">
+								<div class="row">
+									<div class="col-md-12 center p-5">
+										<div class="heading-block mb-1 border-bottom-0 mx-auto">
+											<div class="font-secondary text-black-50 mb-1">New Arrivals</div>
+											<h3 class="nott ls0">Fresh Arrivals / Autumn 18</h3>
+											<p class="font-weight-normal mt-2 mb-3 text-muted" style="font-size: 17px; line-height: 1.4">Dynamically drive interdependent metrics for worldwide portals. Proactively grow client technology schemas.</p>
+											<a href="#" class="button bg-dark text-white button-dark button-small ml-0">Shop Now</a>
+										</div>
+									</div>
+									<div class="col-6">
+										<a href="{{asset('demos/demos/shop/images/sections/1-2.jpg')}}" data-lightbox="image"><img src="{{asset('frontend/demos/shop/images/sections/1-2.jpg')}}" alt="Image"></a>
+									</div>
+									<div class="col-6">
+										<a href="{{asset('demos/demos/shop/images/sections/1-3.jpg')}}" data-lightbox="image"><img src="{{asset('frontend/demos/shop/images/sections/1-3.jpg')}}" alt="Image"></a>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-7 min-vh-50">
+								<a href="https://www.youtube.com/watch?v=bpNcuh_BnsA" data-lightbox="iframe" class="d-block position-relative h-100" style="background: url('{{asset('frontend/demos/shop/images/sections/1.jpg')}}') center center no-repeat; background-size: cover;">
+									<div class="vertical-middle text-center">
+										<div class="play-icon"><i class="icon-play-sign display-3 text-light"></i></div>
+									</div>
+								</a>
 							</div>
 						</div>
-						<span class="pts-right font-weight-bold text-muted">Yearly</span>
-						<div class="price-discount"></div>
 					</div>
 				</div>
 
-				<div class="col-lg-8">
-					<div id="section-pricing" class="page-section p-0 m-0">
+				<div class="clear"></div>
 
-						<div id="pricing-switch" class="pricing row align-items-end no-gutters col-mb-50 mb-4">
+				<!-- New Arrivals Men
+				============================================= -->
+				<div class="container clearfix">
 
-							<div class="col-md-6">
+					<div class="fancy-title title-border topmargin-sm mb-4 title-center">
+						<h4>New Arrivals: Men</h4>
+					</div>
 
-								<div class="pricing-box">
-									<div class="pricing-title">
-										<img class="mb-2 bg-transparent rounded-0" src="{{asset('frontend/demos/seo/images/icons/man.svg')}}" alt="Pricing Icon" width="50">
-										<h3>Single User Plan</h3>
-										<span>Most Popular</span>
+					<div class="row grid-6">
+
+						<!-- Shop Item 1
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/1.jpg')}}" alt="Image 1"></a>
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/1-1.jpg')}}" alt="Image 1"></a>
+									<div class="sale-flash badge badge-danger p-2">Sale!</div>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
 									</div>
-									<div class="pricing-price">
-										<div class="pts-switch-content-left"><span class="price-unit">&dollar;</span>5<span class="price-tenure">Per Month</span></div>
-										<div class="pts-switch-content-right"><span class="price-unit">&dollar;</span>48<span class="price-tenure">Per Year</span></div>
+								</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Light Blue Denim</a></h3></div>
+									<div class="product-price font-primary"><del class="mr-1">$24.99</del> <ins>$12.49</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star-half-full"></i>
+										<i class="icon-star-empty"></i>
 									</div>
-									<div class="pricing-features border-0 bg-transparent">
-										<ul>
-											<li><i class="icon-check-circle color mr-2"></i><strong>Limited</strong> Support</li>
-											<li class="pts-switch-content-left text-black-50"><i class="icon-minus-circle mr-2"></i><del style="opacity: .5"><strong>1</strong> Free Optimization</del></li>
-											<li class="pts-switch-content-right"><i class="icon-check-circle color mr-2"></i><strong>1</strong> Free Optimization</li>
-											<li><i class="icon-check-circle color mr-2"></i><strong>100+</strong> Pages</li>
-											<li><i class="icon-check-circle color mr-2"></i><strong>Single</strong> User License</li>
-											<li><i class="icon-check-circle color mr-2"></i>Phone &amp; Email Support</li>
-										</ul>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 2
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/2.jpg')}}" alt="Image 2"></a>
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/2-1.jpg')}}" alt="Image 2"></a>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
 									</div>
-									<div class="pricing-action">
-										<div class="pts-switch-content-left"><a href="#" class="button button-large button-rounded btn-block text-capitalize m-0 ls0">Get Started</a></div>
-										<div class="pts-switch-content-right"><a href="#" class="button button-large button-rounded btn-block text-capitalize m-0 ls0">Get Started</a></div>
+								</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Deep Blue Sport Shoe</a></h3></div>
+									<div class="product-price font-primary"><ins>$19.99</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star-half-full"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 3
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/4.jpg')}}" alt="Image 3"></a>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
+									</div>
+								</div>
+								<div class="sale-flash badge badge-danger p-2">Sale!</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Printed Men Short</a></h3></div>
+									<div class="product-price font-primary"><del class="mr-1">$41.99</del> <ins>$35.00</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star-empty"></i>
+										<i class="icon-star-empty"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 4
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<div class="fslider" data-arrows="false" data-autoplay="4500">
+										<div class="flexslider">
+											<div class="slider-wrap">
+												<div class="slide"><a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/3.jpg')}}" alt="Image 4"></a></div>
+												<div class="slide"><a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/3-1.jpg')}}" alt="Image 4"></a></div>
+											</div>
+										</div>
+									</div>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
+									</div>
+								</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Women Sportd Track Pant</a></h3></div>
+									<div class="product-price font-primary"><ins>$21.00</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star-half-full"></i>
+										<i class="icon-star-empty"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 5
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/6.jpg')}}" alt="Image 5"></a>
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/6-1.jpg')}}" alt="Image 5"></a>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
+									</div>
+								</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Cool Printed Dress</a></h3></div>
+									<div class="product-price font-primary"><ins>$31.49</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star-empty"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 6
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/5.jpg')}}" alt="Image 6"></a>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
+									</div>
+								</div>
+								<div class="sale-flash badge badge-danger p-2">Sale!</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Red Stripe Girls Top</a></h3></div>
+									<div class="product-price font-primary"><del class="mr-1">$41.99</del> <ins>$35.00</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 7
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/7.jpg')}}" alt="Image 7"></a>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
+									</div>
+								</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Dark Brown Lady Bag for Women</a></h3></div>
+									<div class="product-price font-primary"><ins>$49.49</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star-half-full"></i>
+										<i class="icon-star-empty"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 8
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/8.jpg')}}" alt="Image 8"></a>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
+									</div>
+								</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">UV Poection Sunglass</a></h3></div>
+									<div class="product-price font-primary"><ins>$39.99</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star-half-full"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 9
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/9.jpg')}}" alt="Image 9"></a>
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/9-1.jpg')}}" alt="Image 3"></a>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
+									</div>
+								</div>
+								<div class="sale-flash badge badge-danger p-2">Sale!</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Workout Sweat T-shirt</a></h3></div>
+									<div class="product-price font-primary"><del class="mr-1">$21.99</del> <ins>$15.00</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star-empty"></i>
+										<i class="icon-star-empty"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 10
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/10.jpg')}}" alt="Image 10"></a>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="include/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
+									</div>
+								</div>
+								<div class="sale-flash badge badge-secondary p-2">Out of Stock!</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Sky Blue Printed Bag</a></h3></div>
+									<div class="product-price font-primary"><ins>$61.49</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star-empty"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 11
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<div class="fslider" data-arrows="false" data-autoplay="4500">
+										<div class="flexslider">
+											<div class="slider-wrap">
+												<div class="slide"><a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/11.jpg')}}" alt="Image 10"></a></div>
+												<div class="slide"><a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/11-1.jpg')}}" alt="Image 10"></a></div>
+											</div>
+										</div>
+									</div>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
+									</div>
+								</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Blue Women Watch</a></h3></div>
+									<div class="product-price font-primary"><ins>$23.00</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star-half-full"></i>
+										<i class="icon-star-empty"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Shop Item 12
+						============================================= -->
+						<div class="col-lg-2 col-md-3 col-6 px-2">
+							<div class="product">
+								<div class="product-image">
+									<a href="#"><img src="{{asset('frontend/demos/shop/images/items/new/12.jpg')}}" alt="Image 6"></a>
+									<div class="bg-overlay">
+										<div class="bg-overlay-content align-items-end justify-content-between" data-hover-animate="fadeIn" data-hover-speed="400">
+											<a href="#" class="btn btn-dark mr-2"><i class="icon-shopping-basket"></i></a>
+											<a href="demos/shop/ajax/shop-item.html" class="btn btn-dark" data-lightbox="ajax"><i class="icon-line-expand"></i></a>
+										</div>
+										<div class="bg-overlay-bg bg-transparent"></div>
+									</div>
+								</div>
+								<div class="product-desc">
+									<div class="product-title mb-1"><h3><a href="#">Blue Party Shoe</a></h3></div>
+									<div class="product-price font-primary"><ins>$51.00</ins></div>
+									<div class="product-rating">
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+										<i class="icon-star3"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+
+				<!-- Sign Up
+				============================================= -->
+				<div class="section my-4 py-5">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="row align-items-stretch align-items-center">
+									<div class="col-md-7 min-vh-50" style="background: url('{{asset('frontend/demos/shop/images/sections/3.jpg')}}') center center no-repeat; background-size: cover;">
+										<div class="vertical-middle pl-5">
+											<h2 class="pl-5"><strong>40%</strong> Off<br>First Order*</h2>
+										</div>
+									</div>
+									<div class="col-md-5 bg-white">
+										<div class="card border-0 py-2">
+											<div class="card-body">
+												<h3 class="card-title mb-4 ls0">Sign up to get the most out of shopping.</h3>
+												<ul class="iconlist ml-3">
+													<li><i class="icon-circle-blank text-black-50"></i> Receive Exclusive Sale Alerts</li>
+													<li><i class="icon-circle-blank text-black-50"></i> 30 Days Return Policy</li>
+													<li><i class="icon-circle-blank text-black-50"></i> Cash on Delivery Accepted</li>
+												</ul>
+												<a href="#" class="button button-rounded ls0 font-weight-semibold ml-0 mb-2 nott px-4">Sign Up</a><br>
+												<small class="font-italic text-black-50">Don't worry, it's totally free.</small>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="container">
+
+					<!-- Features
+					============================================= -->
+					<div class="row col-mb-50 mb-0 mt-5">
+						<div class="col-lg-7">
+							<div class="row mt-3">
+								<div class="col-sm-6">
+									<div class="feature-box fbox-sm fbox-plain">
+										<div class="fbox-icon">
+											<a href="#"><i class="icon-line2-present text-dark text-dark"></i></a>
+										</div>
+										<div class="fbox-content">
+											<h3 class="font-weight-normal">100% Original</h3>
+											<p>Canvas provides support for Native HTML5 Videos that can be added to a Full Width Background.</p>
+										</div>
 									</div>
 								</div>
 
-							</div>
-
-							<div class="col-md-6">
-
-								<div class="pricing-box">
-									<div class="pricing-title">
-										<img class="mb-2 bg-transparent rounded-0" src="{{asset('frontend/demos/seo/images/icons/group.svg')}}" alt="Pricing Icon" width="60">
-										<h3>Multiple User Plan</h3>
-									</div>
-									<div class="pricing-price">
-										<div class="pts-switch-content-left"><span class="price-unit">&dollar;</span>12<span class="price-tenure">Per Month</span></div>
-										<div class="pts-switch-content-right"><span class="price-unit">&dollar;</span>115<span class="price-tenure">Per Year</span></div>
-									</div>
-									<div class="pricing-features border-0 bg-transparent">
-										<ul>
-											<li><i class="icon-check-circle color mr-2"></i><strong>24*7</strong> Support</li>
-											<li><i class="icon-check-circle color mr-2"></i><strong>10</strong> Free Optimization</li>
-											<li><i class="icon-check-circle color mr-2"></i><strong>1000+</strong> Pages</li>
-											<li><i class="icon-check-circle color mr-2"></i><strong>Unlimited</strong> User License</li>
-											<li><i class="icon-check-circle color mr-2"></i>Phone &amp; Email Support</li>
-										</ul>
-									</div>
-									<div class="pricing-action">
-										<div class="pts-switch-content-left"><a href="#" class="button button-rounded button-large button-light text-dark bg-white border btn-block nott m-0 ls0">Get Started</a></div>
-										<div class="pts-switch-content-right"><a href="#" class="button button-rounded button-large button-light text-dark bg-white border btn-block nott m-0 ls0">Get Started</a></div>
+								<div class="col-sm-6 mt-4 mt-sm-0">
+									<div class="feature-box fbox-sm fbox-plain">
+										<div class="fbox-icon">
+											<a href="#"><i class="icon-line2-globe text-dark"></i></a>
+										</div>
+										<div class="fbox-content">
+											<h3 class="font-weight-normal">Free Shipping</h3>
+											<p>Display your Content attractively using Parallax Sections that have unlimited customizable areas.</p>
+										</div>
 									</div>
 								</div>
 
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-	<!-- Form Section
-	============================================= -->
-	<div class="section m-0" style="background: url('{{asset('frontend/demos/seo/images/sections/1.jpg')}}') no-repeat center center; background-size: cover; padding: 100px 0;">
-		<div class="container">
-			<div class="row justify-content-between align-items-center">
-
-				<div class="col-md-4">
-					<div class="heading-block border-bottom-0 bottommargin-sm">
-						<div class="badge badge-pill badge-default">Careers</div>
-						<h3 class="nott ls0">Get your free Quote today</h3>
-					</div>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolore voluptatem assumenda quae possimus sunt dignissimos tempora officia.</p>
-				</div>
-
-				<div class="col-lg-3 col-md-4">
-					<div class="card shadow-sm">
-						<div class="card-body">
-							<h4 class="mb-3">Apply Now</h4>
-							<div class="form-widget">
-								<div class="form-result"></div>
-								<form class="row mb-0" id="template-contactform" name="template-contactform" action="include/form.php" method="post">
-									<div class="col-12 form-group mb-3">
-										<label for="template-contactform-name">Name:*</label>
-										<input type="text" id="template-contactform-name" name="template-contactform-name" class="form-control input-sm required" value="">
+								<div class="col-sm-6 mt-4">
+									<div class="feature-box fbox-sm fbox-plain">
+										<div class="fbox-icon">
+											<a href="#"><i class="icon-line2-reload text-dark"></i></a>
+										</div>
+										<div class="fbox-content">
+											<h3 class="font-weight-normal">30-Days Returns</h3>
+											<p>You have complete easy control on each &amp; every element that provides endless customization possibilities.</p>
+										</div>
 									</div>
-									<div class="col-12 form-group mb-3">
-										<label for="template-contactform-email">Email Address:*</label>
-										<input type="email" id="template-contactform-email" name="template-contactform-email" class="form-control input-sm required" value="">
+								</div>
+
+								<div class="col-sm-6 mt-4">
+									<div class="feature-box fbox-sm fbox-plain">
+										<div class="fbox-icon">
+											<a href="#"><i class="icon-line2-wallet text-dark"></i></a>
+										</div>
+										<div class="fbox-content">
+											<h3 class="font-weight-normal">Payment Options</h3>
+											<p>We accept Visa, MasterCard and American Express. And We also Deliver by COD(only in US)</p>
+										</div>
 									</div>
-									<div class="col-12 form-group mb-4">
-										<label for="template-contactform-website">Website:*</label>
-										<input type="text" id="template-contactform-website" name="template-contactform-website" class="form-control input-sm required" value="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-5">
+							<div class="accordion clearfix">
+
+								<div class="accordion-header">
+									<div class="accordion-icon">
+										<i class="accordion-closed icon-ok-circle"></i>
+										<i class="accordion-open icon-remove-circle"></i>
 									</div>
-									<div class="col-12 form-group mb-0">
-										<button class="button button-rounded btn-block nott ls0 m-0" type="submit" id="template-contactform-submit" name="template-contactform-submit" value="submit">Apply Now</button>
+									<div class="accordion-title">
+										Our Mission
 									</div>
-
-									<input type="hidden" name="prefix" value="template-contactform-">
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-4 mt-5 mt-md-0 center">
-					<a href="https://www.youtube.com/watch?v=P3Huse9K6Xs" data-lightbox="iframe" class="play-icon shadow"><i class="icon-play"></i></a>
-				</div>
-
-			</div>
-
-		</div>
-	</div>
-
-	<!-- Works/Projects
-	============================================= -->
-	<div class="section m-0" style="background: url('{{asset('frontend/demos/seo/images/sections/5.jpg')}}') no-repeat center center; background-size: cover;padding: 80px 0;">
-		<div class="container">
-			<div class="heading-block border-bottom-0 center">
-				<div class="badge badge-pill badge-default">Completed Projects</div>
-				<h3 class="nott ls0">Our Latest Works</h3>
-			</div>
-
-			<div id="portfolio" class="portfolio row grid-container gutter-20">
-
-				<article class="portfolio-item col-12 col-sm-6 col-md-4 pf-media pf-icons">
-					<div class="grid-inner">
-						<div class="portfolio-image">
-							<img src="{{asset('frontend/demos/seo/images/works/1.jpg')}}" alt="The Atmosphere">
-							<div class="bg-overlay">
-								<div class="bg-overlay-content dark" data-hover-animate="fadeIn" data-hover-speed="500">
-									<a href="#" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeIn" data-hover-speed="500"><i class="icon-line-ellipsis"></i></a>
 								</div>
-								<div class="bg-overlay-bg dark" data-hover-animate="fadeIn" data-hover-speed="500"></div>
-							</div>
-						</div>
-						<div class="portfolio-desc">
-							<h3><a href="#">The Atmosphere</a></h3>
-							<span>Digital Marketing</span>
-						</div>
-					</div>
-				</article>
+								<div class="accordion-content">Donec sed odio dui. Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</div>
 
-				<article class="portfolio-item col-12 col-sm-6 col-md-4 pf-illustrations">
-					<div class="grid-inner">
-						<div class="portfolio-image">
-							<img src="{{asset('frontend/demos/seo/images/works/2.jpg')}}" alt="Wavelength Structure">
-							<div class="bg-overlay">
-								<div class="bg-overlay-content dark" data-hover-animate="fadeIn" data-hover-speed="500">
-									<a href="#" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeIn" data-hover-speed="500"><i class="icon-line-ellipsis"></i></a>
+								<div class="accordion-header">
+									<div class="accordion-icon">
+										<i class="accordion-closed icon-ok-circle"></i>
+										<i class="accordion-open icon-remove-circle"></i>
+									</div>
+									<div class="accordion-title">
+										What we Do?
+									</div>
 								</div>
-								<div class="bg-overlay-bg dark" data-hover-animate="fadeIn" data-hover-speed="500"></div>
-							</div>
-						</div>
-						<div class="portfolio-desc">
-							<h3>Wavelength Structure</h3>
-							<span>SEO</span>
-						</div>
-					</div>
-				</article>
+								<div class="accordion-content">Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Duis mollis, est non commodo luctus. Aenean lacinia bibendum nulla sed consectetur. Cras mattis consectetur purus sit amet fermentum.</div>
 
-				<article class="portfolio-item col-12 col-sm-6 col-md-4 pf-graphics pf-uielements">
-					<div class="grid-inner">
-						<div class="portfolio-image">
-							<img src="{{asset('frontend/demos/seo/images/works/3.jpg')}}" alt="Greenhouse Garden">
-							<div class="bg-overlay">
-								<div class="bg-overlay-content dark" data-hover-animate="fadeIn" data-hover-speed="500">
-									<a href="#" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeIn" data-hover-speed="500"><i class="icon-line-ellipsis"></i></a>
+								<div class="accordion-header">
+									<div class="accordion-icon">
+										<i class="accordion-closed icon-ok-circle"></i>
+										<i class="accordion-open icon-remove-circle"></i>
+									</div>
+									<div class="accordion-title">
+										Our Company's Values
+									</div>
 								</div>
-								<div class="bg-overlay-bg dark" data-hover-animate="fadeIn" data-hover-speed="500"></div>
-							</div>
-						</div>
-						<div class="portfolio-desc">
-							<h3>Simplicity Pages</h3>
-							<span>Analytics</span>
-						</div>
-					</div>
-				</article>
+								<div class="accordion-content">Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Duis mollis, est non commodo luctus. Aenean lacinia bibendum nulla sed consectetur.</div>
 
-				<article class="portfolio-item col-12 col-sm-6 col-md-4 pf-icons pf-illustrations">
-					<div class="grid-inner">
-						<div class="portfolio-image">
-							<img src="{{asset('frontend/demos/seo/images/works/4.jpg')}}" alt="Industrial Hub">
-							<div class="bg-overlay">
-								<div class="bg-overlay-content dark" data-hover-animate="fadeIn" data-hover-speed="500">
-									<a href="#" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeIn" data-hover-speed="500"><i class="icon-line-ellipsis"></i></a>
+								<div class="accordion-header">
+									<div class="accordion-icon">
+										<i class="accordion-closed icon-ok-circle"></i>
+										<i class="accordion-open icon-remove-circle"></i>
+									</div>
+									<div class="accordion-title">
+										Our Return Policy
+									</div>
 								</div>
-								<div class="bg-overlay-bg dark" data-hover-animate="fadeIn" data-hover-speed="500"></div>
+								<div class="accordion-content">Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Duis mollis, est non commodo luctus. Aenean lacinia bibendum nulla sed consectetur. Cras mattis consectetur purus sit amet fermentum.</div>
+
 							</div>
 						</div>
-						<div class="portfolio-desc">
-							<h3>SEO Analysis</h3>
-							<span>SEO</span>
+
+					</div>
+
+					<div class="clear"></div>
+
+					<!-- Brands
+					============================================= -->
+					<div class="row mt-5">
+						<div class="col-12">
+							<div class="fancy-title title-border title-center mb-4">
+								<h4>Brands who give Flat <span class="text-danger">40%</span> Off</h4>
+							</div>
+
+							<ul class="clients-grid grid-2 grid-sm-3 grid-md-6 grid-lg-8 mb-0">
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/1.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/2.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/3.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/4.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/5.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/6.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/7.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/8.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/9.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/10.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/11.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/12.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/13.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/14.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/15.png')}}" alt="Clients"></a></li>
+								<li class="grid-item"><a href="#"><img src="{{asset('frontend/images/clients/logo/16.png')}}" alt="Clients"></a></li>
+							</ul>
 						</div>
 					</div>
-				</article>
 
-				<article class="portfolio-item col-12 col-sm-6 col-md-4 pf-uielements pf-media">
-					<div class="grid-inner">
-						<div class="portfolio-image">
-							<img src="{{asset('frontend/demos/seo/images/works/5.jpg')}}" alt="Corporate Headquarters">
-							<div class="bg-overlay">
-								<div class="bg-overlay-content dark" data-hover-animate="fadeIn" data-hover-speed="500">
-									<a href="#" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeIn" data-hover-speed="500"><i class="icon-line-ellipsis"></i></a>
+				</div>
+
+				<div class="clear"></div>
+
+				<!-- App Buttons
+				============================================= -->
+				<div class="section pb-0 mb-0" style="background-color: #f8f5f0">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-6 offset-1 bottommargin-lg d-flex flex-column align-self-center">
+								<h3 class="card-title font-weight-normal ls0">Follow. Find. Favorite.<br>Discover Fashion on the Go.</h3>
+								<span>Proactively enable Corporate Benefits.</span>
+								<div class="mt-3">
+									<a href="#" class="button inline-block button-small button-rounded button-desc font-weight-normal ls1 clearfix"><i class="icon-apple"></i><div><span>Download Canvas Shop</span>App Store</div></a>
+									<a href="#" class="button inline-block button-small button-rounded button-desc button-light text-dark font-weight-normal ls1 bg-white border clearfix"><i class="icon-googleplay"></i><div><span>Download Canvas Shop</span>Google Play</div></a>
 								</div>
-								<div class="bg-overlay-bg dark" data-hover-animate="fadeIn" data-hover-speed="500"></div>
 							</div>
-						</div>
-						<div class="portfolio-desc">
-							<h3>Marketing Strategy</h3>
-							<span>Digital Marketing</span>
-						</div>
-					</div>
-				</article>
-
-				<article class="portfolio-item col-12 col-sm-6 col-md-4 pf-graphics pf-illustrations">
-					<div class="grid-inner">
-						<div class="portfolio-image">
-							<img src="{{asset('frontend/demos/seo/images/works/6.jpg')}}" alt="Space Station">
-							<div class="bg-overlay">
-								<div class="bg-overlay-content dark" data-hover-animate="fadeIn" data-hover-speed="500">
-									<a href="#" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeIn" data-hover-speed="500"><i class="icon-line-ellipsis"></i></a>
-								</div>
-								<div class="bg-overlay-bg dark" data-hover-animate="fadeIn" data-hover-speed="500"></div>
-							</div>
-						</div>
-						<div class="portfolio-desc">
-							<h3>Space Station</h3>
-							<span>Social Media</span>
-						</div>
-					</div>
-				</article>
-
-			</div>
-
-			<div class="center">
-				<a href="demo-seo-about.html" class="button button-large button-rounded text-capitalize ml-0 mt-5 ls0">View All Works</a>
-			</div>
-
-		</div>
-	</div>
-
-	<!-- Features
-	============================================= -->
-	<div class="container clearfix py-5">
-		<div class="row">
-			<div class="col-md-4 mt-5">
-				<div class="feature-box fbox-center border-0">
-					<div class="fbox-icon">
-						<a href="#"><img src="{{asset('frontend/demos/seo/images/icons/research.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0"></a>
-					</div>
-					<div class="fbox-content">
-						<h3 class="nott ls0">1. Planning &amp; Research</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum, dolore, voluptates!</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-4 mt-5">
-				<div class="feature-box fbox-center border-0">
-					<div class="fbox-icon">
-						<a href="#"><img src="{{asset('frontend/demos/seo/images/icons/optimizing.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0"></a>
-					</div>
-					<div class="fbox-content">
-						<h3 class="nott ls0">2. Optimizing</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, provident.</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-4 mt-5">
-				<div class="feature-box fbox-center border-0">
-					<div class="fbox-icon">
-						<a href="#"><img src="{{asset('frontend/demos/seo/images/icons/result.svg')}}" alt="Feature Icon" class="bg-transparent rounded-0"></a>
-					</div>
-					<div class="fbox-content">
-						<h3 class="nott ls0">3. Result</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, ipsa!</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Testimonials
-	============================================= -->
-	<div class="section mt-0" style="background: url('{{asset('frontend/demos/seo/images/sections/3.jpg')}}') no-repeat top center; background-size: cover; padding: 80px 0 70px;">
-		<div class="container">
-			<div class="heading-block border-bottom-0 center">
-				<div class="badge badge-pill badge-default">Testimonials</div>
-				<h3 class="nott ls0">What Clients Says</h3>
-			</div>
-
-			<div id="oc-testi" class="owl-carousel testimonials-carousel carousel-widget clearfix" data-margin="0" data-pagi="true" data-loop="true" data-center="true" data-autoplay="5000" data-items-sm="1" data-items-md="2" data-items-xl="3">
-
-				<div class="oc-item">
-					<div class="testimonial">
-						<div class="testi-image">
-							<a href="#"><img src="{{asset('frontend/demos/pet/images/testimonials/1.jpg')}}" alt="Customer Testimonails"></a>
-						</div>
-						<div class="testi-content">
-							<p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur ullam quibusdam cum libero illo rerum repellendus!</p>
-							<div class="testi-meta">
-								John Doe
-								<span>XYZ Inc.</span>
+							<div class="col-md-4 d-none d-md-flex align-items-end">
+								<img src="{{asset('frontend/demos/shop/images/sections/app.png')}}" alt="Image" class="mb-0">
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<div class="oc-item">
-					<div class="testimonial">
-						<div class="testi-image">
-							<a href="#"><img src="{{asset('frontend/demos/pet/images/testimonials/2.jpg')}}" alt="Customer Testimonails"></a>
-						</div>
-						<div class="testi-content">
-							<p>Natus voluptatum enim quod necessitatibus quis expedita harum provident eos obcaecati id culpa corporis molestias.</p>
-							<div class="testi-meta">
-								Collis Ta'eed
-								<span>Envato Inc.</span>
+				<!-- Last Section
+				============================================= -->
+				<div class="section footer-stick bg-white m-0 py-3 border-bottom">
+					<div class="container clearfix">
+
+						<div class="row clearfix">
+							<div class="col-lg-4 col-md-6">
+								<div class="shop-footer-features mb-3 mb-lg-3"><i class="icon-line2-globe-alt"></i><h5 class="inline-block mb-0 ml-2 font-weight-semibold"><a href="#">Free Shipping</a><span class="font-weight-normal text-muted"> &amp; Easy Returns</span></h5></div>
+							</div>
+							<div class="col-lg-4 col-md-6">
+								<div class="shop-footer-features mb-3 mb-lg-3"><i class="icon-line2-notebook"></i><h5 class="inline-block mb-0 ml-2"><a href="#">Geniune Products</a><span class="font-weight-normal text-muted"> Guaranteed</span></h5></div>
+							</div>
+							<div class="col-lg-4 col-md-12">
+								<div class="shop-footer-features mb-3 mb-lg-3"><i class="icon-line2-lock"></i><h5 class="inline-block mb-0 ml-2"><a href="#">256-Bit</a> <span class="font-weight-normal text-muted">Secured Checkouts</span></h5></div>
 							</div>
 						</div>
+
 					</div>
 				</div>
-				<div class="oc-item">
-					<div class="testimonial">
-						<div class="testi-image">
-							<a href="#"><img src="{{asset('frontend/demos/pet/images/testimonials/3.jpg')}}" alt="Customer Testimonails"></a>
-						</div>
-						<div class="testi-content">
-							<p>Natus voluptatum enim quod necessitatibus quis expedita harum provident eos obcaecati id culpa corporis molestias.</p>
-							<div class="testi-meta">
-								Collis Ta'eed
-								<span>Envato Inc.</span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="oc-item">
-					<div class="testimonial">
-						<div class="testi-image">
-							<a href="#"><img src="{{asset('frontend/demos/pet/images/testimonials/4.jpg')}}" alt="Customer Testimonails"></a>
-						</div>
-						<div class="testi-content">
-							<p>Natus voluptatum enim quod necessitatibus quis expedita harum provident eos obcaecati id culpa corporis molestias.</p>
-							<div class="testi-meta">
-								Mary Jane
-								<span>Google Inc.</span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="oc-item">
-					<div class="testimonial">
-						<div class="testi-image">
-							<a href="#"><img src="{{asset('frontend/images/testimonials/5.jpg')}}" alt="Customer Testimonails"></a>
-						</div>
-						<div class="testi-content">
-							<p>Natus voluptatum enim quod necessitatibus quis expedita harum provident eos obcaecati id culpa corporis molestias.</p>
-							<div class="testi-meta">
-								Steve Jobs
-							<span>Apple Inc.</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Blogs
-	============================================= -->
-	<div class="container py-4">
-		<div class="heading-block border-bottom-0 center">
-			<div class="badge badge-pill badge-default">Latest Articles</div>
-			<h3 class="nott ls0">Recently From the Blog</h3>
-		</div>
-
-		<div class="row mt-5 clearfix">
-			<div class="col-md-4">
-				<article class="entry">
-					<div class="entry-image mb-3">
-						<a href="#"><img src="{{asset('frontend/demos/seo/images/blog/1.jpg')}}" alt="Image 3"></a>
-					</div>
-					<div class="entry-title">
-						<h3><a href="#">Top Most SEO Optizied Websites</a></h3>
-					</div>
-					<div class="entry-meta">
-						<ul>
-							<li><i class="icon-line2-user"></i><a href="#"> John Doe</a></li>
-							<li><i class="icon-calendar-times1"></i><a href="#"> 11 Mar 2021</a></li>
-						</ul>
-					</div>
-					<div class="entry-content clearfix">
-						<p>Asperiores, tenetur, blanditiis, quaerat odit ex exercitationem progressive technology through pariatur quibusdam veritatis quisquam. Efficiently communicate alternative.</p>
-					</div>
-				</article>
-			</div>
-
-			<div class="col-md-4">
-				<article class="entry">
-					<div class="entry-image mb-3">
-						<a href="#"><img src="{{asset('frontend/demos/seo/images/blog/2.jpg')}}" alt="Image 3"></a>
-					</div>
-					<div class="entry-title">
-						<h3><a href="#">10 Recent SEO Tips for Startups</a></h3>
-					</div>
-					<div class="entry-meta">
-						<ul>
-							<li><i class="icon-line2-user"></i><a href="#"> Semicolonweb</a></li>
-							<li><i class="icon-calendar-times1"></i><a href="#"> 18 Apr 2021</a></li>
-						</ul>
-					</div>
-					<div class="entry-content clearfix">
-						<p>Interactively predominate progressive technology through distinctive materials. Progressively benchmark extensible intellectual. Exercitationem progressive technology through pariatur.</p>
-					</div>
-				</article>
-			</div>
-
-			<div class="col-md-4">
-				<article class="entry">
-					<div class="entry-image mb-3">
-						<a href="#"><img src="{{asset('frontend/demos/seo/images/blog/3.jpg')}}" alt="Image 3"></a>
-					</div>
-					<div class="entry-title">
-						<h3><a href="#">3 Ways to Transform Your Site Into a SEO</a></h3>
-					</div>
-					<div class="entry-meta">
-						<ul>
-							<li><i class="icon-line2-user"></i><a href="#"> John Doe</a></li>
-							<li><i class="icon-calendar-times1"></i><a href="#"> 06 Aug 2021</a></li>
-						</ul>
-					</div>
-					<div class="entry-content clearfix">
-						<p>Globally synergize premium metrics with holistic e-markets. Professionally morph interoperable networks vis-a-vis value-added methods.</p>
-					</div>
-				</article>
-			</div>
-		</div>
-
-	</div>
-
-	<!-- Promo/Contact
-	============================================= -->
-	<div class="section mt-5 footer-stick promo-section bg-transparent" style="padding: 100px 0; overflow: visible">
-		<div class="container">
-			<div class="heading-block border-bottom-0 center">
-				<h5 class="text-uppercase ls1 mb-1">Grab your Free Trail and Explore the Options</h5>
-				<h2 class="nott ls0">Try Keyword Search 30 Days Free With Canvas<span>SEO</span></h2>
-				<a href="demo-seo-contact.html" class="button button-large button-rounded nott ml-0 ls0 mt-4">Contact Us Now</a>
-			</div>
-		</div>
-	</div>
 </div>
-
 @endsection
 

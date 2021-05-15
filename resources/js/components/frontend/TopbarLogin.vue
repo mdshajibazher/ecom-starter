@@ -1,6 +1,6 @@
 <template>
-    <li class="top-links-item"><a href="#">Login</a>
-        <div class="top-links-section">
+    <li class="custom-top-links-item" ><a class="custom-top-links-item" @click="ToggleActive()" href="#">Login <i class="icon-angle-down"></i></a>
+        <div class="top-links-section" :class="{'menu-pos-invert d-block': isActive}" style="width: 260px"> 
             <form @submit.prevent="Login" @keydown="form.onKeydown($event)" style="display:inline">
                 <div class="form-group">
                     <label>Email</label>
@@ -29,6 +29,7 @@ export default {
 
     data(){
         return {
+            isActive: false,
             form: new Form({
                 no_redirect_json_return: true,
                 email: '',
@@ -41,17 +42,43 @@ export default {
         AlertError
     },
     methods:{
+        ToggleActive(){
+             this.isActive = !this.isActive;
+        },
         Login(){
             this.form.busy = true;
             this.form.post('/login')
             .then(({data}) => {
                  this.$store.dispatch('isLoggedIn');
             })  
-            .catch( e => {
-                console.log(e);
-            })
+            .catch(e => {
+				iziToast.error({
+					title: 'Error',
+					position: 'topRight',
+					message: e.response.data.message,
+				});
+			})
         }
     
     }
 }
 </script>
+<style scoped>
+.custom-top-links-item {
+	position: relative;
+	border-left: 1px solid #EEE;
+}
+.custom-top-links-item:first-child,
+.top-links-sub-menu .custom-top-links-item { border-left: 0 !important; }
+
+.custom-top-links-item > a {
+	display: block;
+	padding: 12px;
+	font-size: 0.75rem;
+	line-height: 20px;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: #666;
+}
+
+</style>

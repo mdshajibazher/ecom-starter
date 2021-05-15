@@ -276,6 +276,7 @@ export default {
             });
         },
         getSubCollectionbyId(){
+            this.sub_collections = "";
             if(this.collection == null){
                 this.subcollections_options = [];
             }else{

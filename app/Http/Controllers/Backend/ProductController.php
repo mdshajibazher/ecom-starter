@@ -146,6 +146,7 @@ class ProductController extends Controller
                 'title' =>$request->title,
                 'sku' =>$request->sku,
                 'description' =>$request->description,
+                'collection_id'=> $request['collection']['id'],
             ]);
 
             if ($request->product_image) {

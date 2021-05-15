@@ -6,3 +6,7 @@
 -----------------------------------------------------------------*/
 
 
+.top-links-container{
+    align-items: normal;
+    justify-content: end;
+}
