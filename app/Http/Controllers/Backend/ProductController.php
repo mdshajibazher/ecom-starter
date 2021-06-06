@@ -6,6 +6,8 @@ use DB;
 use Carbon;
 use Session;
 use Validator;
+use App\Models\Size;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\Variant;
 use App\Models\Collection;
@@ -28,9 +30,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $variants = Variant::all();
-        $products=Product::with('prices.variant_one','prices.variant_two','prices.variant_three')->paginate(10);
-        return view('backend.products.index',compact('products','variants'));
+        $products=Product::with('prices.color','prices.size')->paginate(10);
+        return view('backend.products.index',compact('products'));
     }
 
     /**
@@ -40,10 +41,11 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $variants = Variant::all();
+        $colors = Color::all();
+        $sizes = Size::all();
         $subcollections = Subcollection::all();
         $collections = Collection::all();
-        return view('backend.products.create', compact('variants','subcollections','collections'));
+        return view('backend.products.create', compact('colors','sizes','subcollections','collections'));
     }
 
     /**
@@ -55,7 +57,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->data_validate($request);
-
         DB::beginTransaction();
         try {
             $product=Product::create([
@@ -73,8 +74,11 @@ class ProductController extends Controller
                     'file_path'=>$value,
                 ]);
             }
-            $product_variant_ids=$this->insertProductVariant($request,$product_id);
-            $this->insertProductVariantPrices($request,$product_variant_ids,$product_id);
+
+            $this->insertProductVariantCombinations($request,$product_id);
+            $this->AttachSubcollection($request, $product);
+            $this->AttachSizes($request, $product);
+            $this->AttachColors($request, $product);
             $this->AttachSubcollection($request, $product);
                 DB::commit();
             } catch (\Exception $e) {
@@ -99,13 +103,9 @@ class ProductController extends Controller
         $paginate_perpage = $request->per_page ? $request->per_page : 10;
         $orderBy = $request->orderBy ? $request->orderBy : 'id';
         $orderByDir = $request->orderByDir ? $request->orderByDir : 'desc';
-        return Product::with('prices.variant_one','prices.variant_two','prices.variant_three')->where($query_field,'LIKE',"%$query%")->orderBy($orderBy,$orderByDir)->paginate($paginate_perpage);
+        return Product::with('prices.color','prices.size')->where($query_field,'LIKE',"%$query%")->orderBy($orderBy,$orderByDir)->paginate($paginate_perpage);
     }
 
-    public function show($product)
-    {
-       
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -115,15 +115,14 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::with('Collection','Subcollections')->findOrFail($id);
-        $data['variants'] = Variant::all();
+        $product = Product::with('Collection','Subcollections','Sizes', 'Colors')->findOrFail($id);
+        $data['colors'] = Color::all();
+        $data['sizes'] = Size::all();
         $data['product']=$product;
-        $data['product']['product_variants']=ProductVariant::where('product_id',$product->id)->get()->groupBy('variant_id');
-        $data['prices']=$product->load('prices.variant_one','prices.variant_two','prices.variant_three');
+        $data['prices']=$product->load('prices.color','prices.size');
         $data['images']=$product->load('images');
         $data['subcollections']=Subcollection::all();
         $data['collections']=Collection::all();
-   
         return view('backend.products.edit', $data);
     }
 
@@ -166,6 +165,8 @@ class ProductController extends Controller
             $product->prices()->delete();
             $this->insertProductVariantPrices($request,$product_variant_ids,$product_id);
             $this->SyncSubcollection($request,$product);
+            $this->SyncSizes($request, $product);
+            $this->SyncColors($request, $product);
 
             DB::commit();
         } catch (\Exception $e) {
@@ -190,7 +191,7 @@ class ProductController extends Controller
         $paginate_perpage = $request->per_page ? $request->per_page : 10;
         $orderBy = $request->orderBy ? $request->orderBy : 'id';
         $orderByDir = $request->orderByDir ? $request->orderByDir : 'desc';
-        return Product::with('prices.variant_one','prices.variant_two','prices.variant_three')->orderBy($orderBy,$orderByDir)->paginate($paginate_perpage);
+        return Product::with('prices.color','prices.size')->orderBy($orderBy,$orderByDir)->paginate($paginate_perpage);
     }
 
     public function deleteImages($id){

@@ -10,18 +10,17 @@ class Product extends Model
         'title', 'sku','collection_id','description'
     ];
 
-    public function variants()
-    {
-    	return $this->hasMany(ProductVariant::class);
-    }
-    public function productvariants()
-    {
-        return $this->belongsToMany(Variant::class,'product_variants','product_id','variant_id'); 
-    }
-    
     public function prices()
     {
-    	return $this->hasMany(ProductVariantPrice::class);
+    	return $this->hasMany(ProductVariantCombination::class);
+    }
+
+    public function Sizes(){
+    	return $this->belongsToMany(Size::class);
+    }
+
+    public function Colors(){
+    	return $this->belongsToMany(Color::class);
     }
 
     public function images()

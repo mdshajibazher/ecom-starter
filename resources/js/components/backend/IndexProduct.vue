@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table  class="table table-striped table-hover table-bordered" v-if="total_data > 0">
+                        <table  class="table table-striped table-bordered" v-if="total_data > 0">
                             <thead>
                             <tr>
                                 <th @click="sort('id')" class="text-center" style="cursor: pointer"># <span v-html="getsortIcon(orderByDir)"></span> </th>
@@ -62,9 +62,7 @@
                                         <div v-bind:class="{ 'h-auto': pd.id == expand_id }" style="height: 80px; overflow: hidden" id="variant">
                                         <table class="table" v-for="(price,index) in pd.prices" :key="index">
                                             <tr>
-                                                <th>{{price.variant_one==null?'':price.variant_one.variant+'/' }} 
-                                                {{price.variant_two==null?'':price.variant_two.variant+'/' }}
-                                                {{price.variant_three==null?'':price.variant_three.variant+'/' }} </th>
+                                                <th>{{price.label }} <div class="panel_head" :style="{background: price.color.color_code}" ></div> </th>
                                             </tr>
                                             <tr>
                                                 <td>Price :  <b>{{ price.price }}</b> InStock :  <b>{{ price.stock }}</b> </td>
@@ -212,4 +210,12 @@ export default {
 }
 </script>
 
-
+<style scoped>
+.panel_head{
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    display: inline-block;
+    margin-left: 20px;
+}
+</style>

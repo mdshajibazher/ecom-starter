@@ -3,7 +3,7 @@
 @section('title','collections')
 
 @section('content')
-<index-product :url="{{json_encode(["url" => url('/')])}}" :variants="{{json_encode($variants)}}" :products="{{json_encode($products)}}">Loading </index-product>
+<index-product :url="{{json_encode(["url" => url('/')])}}" :products="{{json_encode($products)}}">Loading </index-product>
 @endsection
 
 

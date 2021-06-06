@@ -65,42 +65,38 @@
                             <h6 class="m-0 font-weight-bold text-primary">Variants</h6>
                         </div>
                         <div class="card-body">
-                            <div class="row" v-for="(item,index) in product_variant" :key="index">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <p class="text-danger" v-if="validationErrors.variant_tag">{{validationErrors.variant_tag[0][0]}}</p>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            Sizes
+                                        </div>
+                                        <div class="col-9">
+                                            <multiselect :class="{ 'is-invalid': validationErrors.sizes }" @input="generateCombination()"  placeholder="Select some size" :close-on-select="false" track-by="id"  label="title" :multiple="true" v-model="productVariants.sizes" :options="sizes"></multiselect>
 
-
-                                        <label for="">Option</label>
-                                        <select v-model="item.option" class="form-control">
-                                            <option v-for="(variant,index) in variants"
-                                                    :value="variant.id" :key="index">
-                                                {{ variant.title }}
-                                            </option>
-                                        </select>
+                                             <small class="text-danger" v-if="validationErrors.sizes">{{validationErrors.sizes[0]}}</small>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label v-if="product_variant.length != 1" @click="product_variant.splice(index,1); checkVariant()"
-                                               class="float-right text-primary"
-                                               style="cursor: pointer;">Remove</label>
-                                        <label v-else for="">.</label>
-                                        <input-tag v-model="item.tags" @input="checkVariant" class="form-control"></input-tag>
-
-                                        
+                            <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            Colors
+                                        </div>
+                                        <div class="col-9">
+                                            <multiselect :class="{ 'is-invalid': validationErrors.colors }"  @input="generateCombination()"  placeholder="Select some color" :close-on-select="false" track-by="id"  label="title" :multiple="true" v-model="productVariants.colors" :options="colors"></multiselect>
+                                             
+                                            <small class="text-danger" v-if="validationErrors.colors">{{validationErrors.colors[0]}}</small>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                         </div>
-                        <div class="card-footer" v-if="product_variant.length < variants.length && product_variant.length < 3">
-                            <button @click="newVariant"  class="btn btn-primary">Add another option</button>
-                        </div>
+
 
                         <div class="card-header text-uppercase">Preview</div>
+
                         <div class="card-body">
                             <div class="table-responsive">
-                                 <p class="text-danger" v-if="validationErrors.product_variant_prices">{{validationErrors.product_variant_prices[0]}}</p>
+                                 <p class="alert alert-danger" v-if="validationErrors.variant_combinations">{{validationErrors.variant_combinations[0]}}</p>
                                 <table class="table">
                                     <thead>
                                     <tr>
@@ -110,19 +106,20 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="variant_price in product_variant_prices" :key="variant_price.id">
-                                        <td>{{ variant_price.title }}</td>
+                                    <tr v-for="(combination,index) in variant_combinations" :key="index">
+                                        <td>{{combination.size.title  +' / '+  combination.color.title}}</td>
                                         <td>
-                                            <input type="text" class="form-control" v-model="variant_price.price">
+                                            <input type="text" class="form-control" v-model="combination.price">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" v-model="variant_price.stock">
+                                            <input type="text" class="form-control" v-model="combination.stock">
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -136,7 +133,6 @@
 import Multiselect from 'vue-multiselect';
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
-import InputTag from 'vue-input-tag'
 import ValidationErrors from '../error/ValidationErrors';
 
 export default {
@@ -145,62 +141,51 @@ export default {
         if (this.edit_mode==false) {
             this.$set(this.dropzoneOptions,'addRemoveLinks',true);
         }
-        this.collections_options = this.props_collections;
+        this.collections_options = this.collections_props;
 
 
     },
     mounted() {
+        this.colors = this.colors_props;
+        this.sizes = this.sizes_props;
         if (this.edit_mode==false) {
             this.imageEditMode=false;
         }
         if(this.edit_mode){
-            console.log(this.products);
             this.imageEditMode=true;
             this.product_name=this.products.title;
             this.product_sku=this.products.sku;
             this.description=this.products.description;
             this.collection = this.products.collection;
             this.sub_collections = this.products.subcollections;
-            this.product_variant=[];
-            var available_variants=[];
             var ref=this;
 
-            /*product_variant*/
-            $.each(ref.products.product_variants,function(index,value) {
-                let tag=[];
-                available_variants[index];
-                $.each(value,function(key,variant) {
-                    tag.push(variant.variant);
-                 })
-                ref.product_variant.push({
-                    option: index,
-                    tags: tag
-                })
-            })
-            
+            this.productVariants.sizes = this.products.sizes;
+            this.productVariants.colors = this.products.colors;
+
             /*product_prices*/
-            $.each(ref.prices.prices,function(index,value) {
-                let items='';
-                let variant_one=(value.variant_one == null)?'':value.variant_one.variant+'/';
-                let variant_two=value.variant_two == null?'':value.variant_two.variant+'/';
-                let variant_three=value.variant_three == null?'':value.variant_three.variant+'/';
-                items=variant_one+variant_two+variant_three;
-                
-                ref.product_variant_prices.push({
-                    title: items,
+            console.log(ref.prices.prices);
+            ref.prices.prices.forEach((value) => {
+                console.log( this.productVariants);
+                ref.variant_combinations.push({
+                    combination: value.label,
+                    size: value.size,
+                    color: value.color,
                     price: value.price,
-                    stock: value.stock
+                    stock: value.stock,
                 })
             })
             
             /*images*/
-            $.each(ref.image.images,function(key,value) {
+            ref.image.images.forEach((value) => {
                 ref.prevUplodedImage.push(value.file_path);
             })
         }
     } ,
     data() {
         return {
+            sizes: [],
+            colors: [],
             imageEditMode:false,
             collection: '',
             collections_options: [],
@@ -212,13 +197,11 @@ export default {
             images: [],
             prevUplodedImage: [],
             validationErrors: '',
-            product_variant: [
-                {
-                    option: this.variants[0].id,
-                    tags: []
-                }
-            ],
-            product_variant_prices: [],
+            variant_combinations: [],
+            productVariants: {
+                colors: [],
+                sizes: [],
+            },
             dropzoneOptions: {
                 url: 'https://httpbin.org/post',
                 // thumbnailWidth: 215,
@@ -237,7 +220,6 @@ export default {
 
     components: {
         vueDropzone: vue2Dropzone,
-        InputTag,
         ValidationErrors,
         Multiselect
     },
@@ -245,10 +227,6 @@ export default {
         edit_mode: {
             type: Boolean,
             default:false
-        },
-        variants: {
-            type: Array,
-            required: true
         },
         products: {
             type: Object,
@@ -259,9 +237,16 @@ export default {
         prices: {
             type: Object,
         },
-        props_collections:{
+        collections_props:{
              type: Array,
         },
+        colors_props: {
+            type: Array,
+        },
+        sizes_props: {
+            type: Array,
+        }
+
 
     },
 
@@ -283,7 +268,6 @@ export default {
             axios.get('/app/collections/'+this.collection.id)
             .then( ({data}) => {
                 this.subcollections_options = data.subcollections;
-                console.log(data);
             })
             .catch( (e) => {
                   iziToast.error({
@@ -301,7 +285,6 @@ export default {
         removeImage(file){
             let image=file.dataURL;
             this.images.pop(image);
-            console.log(image);
         },
         showImage(){
             var ref=this;
@@ -312,7 +295,6 @@ export default {
                 var url = '';
                 ref.$nextTick(function() {
                     for (var i = 0; i <ref.prevUplodedImage.length; i++) {
-                        console.log(img[i]);
                         this.$set(file,'name',img[i]);
                         url = '/images/products/thumb/'+img[i];
                         ref.$refs.myVueDropzone.manuallyAddFile(file, url);
@@ -343,48 +325,45 @@ export default {
             })
             }
         },
-        newVariant() {
-            let all_variants = this.variants.map(el => el.id)
-            let selected_variants = this.product_variant.map(el => el.option);
-            let available_variants = all_variants.filter(entry1 => !selected_variants.some(entry2 => entry1 == entry2))
-            console.log(available_variants)
 
-            this.product_variant.push({
-                option: available_variants[0],
-                tags: []
-            })
-        },
 
-        // check the variant and render all the combination
-        checkVariant() {
-            console.log('removed');
-            let tags = [];
-            this.product_variant_prices = [];
-            this.product_variant.filter((item) => {
-                tags.push(item.tags);
-            })
-
-            this.getCombn(tags).forEach(item => {
-                this.product_variant_prices.push({
-                    title: item,
-                    price: 0,
-                    stock: 0
+        generateCombination(){
+            // console.log(selected_data);
+            let old_combinations =  this.variant_combinations;
+            let new_combination = [];
+            let final_combinations = [];
+            let selected_sizes = this.productVariants.sizes;
+            let selected_colors = this.productVariants.colors;
+ 
+            selected_sizes.forEach((size) => {
+                selected_colors.forEach((color) => {
+                   new_combination.push({
+                       combination: size.title+'/'+color.title,
+                       size: size,
+                       color: color,
+                       price: 0,
+                       stock: 0,
+                   })
                 })
             })
+
+            if(old_combinations.length > 0){
+                new_combination.forEach((newData,index) => {
+                    let oldDataExist =  old_combinations.find((data) => {
+                        return data.combination == newData.combination;
+                    });
+                    if(oldDataExist){
+                        new_combination[index] = oldDataExist;
+                    }
+                })
+            }
+
+            final_combinations= new_combination;
+            this.variant_combinations = final_combinations;
         },
 
-        // combination algorithm
-        getCombn(arr, pre) {
-            pre = pre || '';
-            if (!arr.length) {
-                return pre;
-            }
-            let self = this;
-            let ans = arr[0].reduce(function (ans, value) {
-                return ans.concat(self.getCombn(arr.slice(1), pre + value + '/'));
-            }, []);
-            return ans;
-        },
+
+
 
         // store product into database
         saveProduct() {
@@ -394,11 +373,13 @@ export default {
                 editImage:this.imageEditMode,
                 title: this.product_name,
                 sku: this.product_sku,
+                sizes: this.productVariants.sizes,
+                colors: this.productVariants.colors,
                 collection: this.collection,
                 description: this.description,
                 product_image: this.images,
                 product_variant: this.product_variant,
-                product_variant_prices: this.product_variant_prices,
+                variant_combinations: this.variant_combinations,
                 sub_collections: this.sub_collections
             }
 
@@ -408,11 +389,15 @@ export default {
                    this.$Progress.finish();
                 //    window.location = '/app/product';
                 }).catch((error )=> {
-                    let errors=error.response.data.errors;
+                    let msg =error.response.data.message;
                     if (error.response.status == 422){
+                    iziToast.error({
+                        title: 'Error',
+                        position: 'topRight',
+                        message: msg,
+                    });
                     this.validationErrors = error.response.data.errors;
                     }
-                    this.errorMsg(errors);
                     this.$Progress.fail();
                 })
 
@@ -422,11 +407,15 @@ export default {
                         this.$Progress.finish();
                         // window.location = '/app/product';
                 }).catch((error) => {
-                    let errors=error.response.data.errors;
+                    let msg =error.response.data.message;
                     if (error.response.status == 422){
+                    iziToast.error({
+                        title: 'Error',
+                        position: 'topRight',
+                        message: msg,
+                    });
                     this.validationErrors = error.response.data.errors;
                     }
-                    this.errorMsg(errors);
                     this.$Progress.fail();
                 })
             }
