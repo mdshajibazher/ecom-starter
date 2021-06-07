@@ -1950,16 +1950,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     this.$store.dispatch('getCartItem');
   },
   methods: {
-    removeProductFromCart: function removeProductFromCart(product_variant_price_id) {
-      this.$store.dispatch('removeProductFromCart', product_variant_price_id);
+    removeProductFromCart: function removeProductFromCart(product_variant_combination_id) {
+      this.$store.dispatch('removeProductFromCart', product_variant_combination_id);
     }
   },
   computed: {
@@ -2143,23 +2140,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2198,10 +2178,10 @@ __webpack_require__.r(__webpack_exports__);
     LoginComponent: _LoginComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   methods: {
-    addToCart: function addToCart(product, product_variant_price) {
+    addToCart: function addToCart(product, product_variant_combination) {
       var _this2 = this;
 
-      this.buttonLoader = product_variant_price.id;
+      this.buttonLoader = product_variant_combination.id;
       axios.get('/is_logged_in').then(function (_ref2) {
         var data = _ref2.data;
 
@@ -2211,7 +2191,7 @@ __webpack_require__.r(__webpack_exports__);
           _this2.$store.dispatch('addProductToCart', {
             product: product,
             qty: 1,
-            product_variant_price: product_variant_price
+            product_variant_combination: product_variant_combination
           }); // this.buttonLoader = false;
 
         } else {
@@ -4994,54 +4974,17 @@ var render = function() {
                                 "top-cart-item-price d-block text-uppercase"
                             },
                             [
-                              item.product_variant_price.variant_one
-                                ? _c(
-                                    "span",
-                                    { staticClass: "badge badge-dark mb-0" },
-                                    [
-                                      _vm._v(
-                                        _vm._s(
-                                          item.product_variant_price.variant_one
-                                            .variant
-                                        ) + " "
-                                      )
-                                    ]
+                              _c(
+                                "span",
+                                { staticClass: "badge badge-dark mb-0" },
+                                [
+                                  _vm._v(
+                                    _vm._s(
+                                      item.product_variant_combination.label
+                                    ) + " \n                                 "
                                   )
-                                : _vm._e(),
-                              _vm._v(" "),
-                              item.product_variant_price.variant_two
-                                ? _c(
-                                    "span",
-                                    { staticClass: "badge badge-primary mb-0" },
-                                    [
-                                      _vm._v(
-                                        "\n                                 " +
-                                          _vm._s(
-                                            item.product_variant_price
-                                              .variant_two.variant
-                                          ) +
-                                          " "
-                                      )
-                                    ]
-                                  )
-                                : _vm._e(),
-                              _vm._v(" "),
-                              item.product_variant_price.variant_three
-                                ? _c(
-                                    "span",
-                                    { staticClass: "badge badge-info mb-0" },
-                                    [
-                                      _vm._v(
-                                        "\n                                 " +
-                                          _vm._s(
-                                            item.product_variant_price
-                                              .variant_three.variant
-                                          ) +
-                                          "\n                                 "
-                                      )
-                                    ]
-                                  )
-                                : _vm._e()
+                                ]
+                              )
                             ]
                           ),
                           _vm._v(" "),
@@ -5050,12 +4993,13 @@ var render = function() {
                             { staticClass: "top-cart-item-price d-block" },
                             [
                               _vm._v(
-                                _vm._s(item.product_variant_price.price) +
+                                _vm._s(item.product_variant_combination.price) +
                                   " x " +
                                   _vm._s(item.qty) +
                                   " = " +
                                   _vm._s(
-                                    item.product_variant_price.price * item.qty
+                                    item.product_variant_combination.price *
+                                      item.qty
                                   ) +
                                   " Tk. "
                               )
@@ -5073,7 +5017,7 @@ var render = function() {
                                 click: function($event) {
                                   $event.preventDefault()
                                   return _vm.removeProductFromCart(
-                                    item.product_variant_price.id
+                                    item.product_variant_combination.id
                                   )
                                 }
                               }
@@ -5431,80 +5375,7 @@ var render = function() {
                         _c("tr", [
                           _c("td", [_vm._v("Variation: ")]),
                           _vm._v(" "),
-                          _c("td", [
-                            _c(
-                              "table",
-                              {
-                                staticClass:
-                                  "table table-bordered table-sm table-light"
-                              },
-                              [
-                                price.variant_one != null
-                                  ? _c("tr", [
-                                      _c("th", [
-                                        _vm._v(
-                                          _vm._s(
-                                            price.variant_one.variant_label
-                                              .title
-                                          ) + " : "
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(
-                                          " " +
-                                            _vm._s(
-                                              price.variant_one.variant.toUpperCase()
-                                            )
-                                        )
-                                      ])
-                                    ])
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                price.variant_two != null
-                                  ? _c("tr", [
-                                      _c("th", [
-                                        _vm._v(
-                                          _vm._s(
-                                            price.variant_two.variant_label
-                                              .title
-                                          ) + " : "
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(
-                                          _vm._s(
-                                            price.variant_two.variant.toUpperCase()
-                                          )
-                                        )
-                                      ])
-                                    ])
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                price.variant_three != null
-                                  ? _c("tr", [
-                                      _c("th", [
-                                        _vm._v(
-                                          _vm._s(
-                                            price.variant_three.variant_label
-                                              .title
-                                          ) + " : "
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(
-                                          _vm._s(
-                                            price.variant_three.variant.toUpperCase()
-                                          )
-                                        )
-                                      ])
-                                    ])
-                                  : _vm._e()
-                              ]
-                            )
-                          ])
+                          _c("td", [_vm._v(" " + _vm._s(price.label))])
                         ]),
                         _vm._v(" "),
                         _c("tr", [
@@ -20664,16 +20535,17 @@ var addProductToCart = function addProductToCart(_ref3, _ref4) {
   var commit = _ref3.commit;
   var product = _ref4.product,
       qty = _ref4.qty,
-      product_variant_price = _ref4.product_variant_price;
+      product_variant_combination = _ref4.product_variant_combination;
   axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/add_to_cart/', {
     product_id: product.id,
     qty: qty,
-    product_variant_price_id: product_variant_price.id
+    product_variant_combination_id: product_variant_combination.id
   }).then(function (res) {
+    console.log(res);
     commit('ADD_TO_CART', {
       product: product,
       qty: qty,
-      product_variant_price: product_variant_price
+      product_variant_combination: product_variant_combination
     });
   })["catch"](function (e) {
     iziToast.error({
@@ -20746,7 +20618,7 @@ var CartTotalPrice = function CartTotalPrice(state) {
   var total = 0; // if(state.cart){
 
   state.cart.forEach(function (item) {
-    total += parseFloat(item.product_variant_price.price) * parseFloat(item.qty);
+    total += parseFloat(item.product_variant_combination.price) * parseFloat(item.qty);
   }); // }
 
   return total;
@@ -20802,9 +20674,9 @@ __webpack_require__.r(__webpack_exports__);
 var ADD_TO_CART = function ADD_TO_CART(state, _ref) {
   var product = _ref.product,
       qty = _ref.qty,
-      product_variant_price = _ref.product_variant_price;
+      product_variant_combination = _ref.product_variant_combination;
   var product_in_cart = state.cart.find(function (item) {
-    return item.product.id == product.id && item.product_variant_price.id == product_variant_price.id;
+    return item.product.id == product.id && item.product_variant_combination.id == product_variant_combination.id;
   });
 
   if (product_in_cart) {
@@ -20820,7 +20692,7 @@ var ADD_TO_CART = function ADD_TO_CART(state, _ref) {
   state.cart.push({
     product: product,
     qty: qty,
-    product_variant_price: product_variant_price
+    product_variant_combination: product_variant_combination
   });
   iziToast.success({
     title: 'Success',
@@ -20834,9 +20706,9 @@ var SET_CART = function SET_CART(state, cartItems) {
 var IS_LOGGED_IN = function IS_LOGGED_IN(state, status) {
   state.is_logged_in = status;
 };
-var REMOVE_PRODUCT_FROM_CART = function REMOVE_PRODUCT_FROM_CART(state, product_variant_price_id) {
+var REMOVE_PRODUCT_FROM_CART = function REMOVE_PRODUCT_FROM_CART(state, product_variant_combination_id) {
   state.cart = state.cart.filter(function (item) {
-    return item.product_variant_price.id !== product_variant_price_id;
+    return item.product_variant_combination.id !== product_variant_combination_id;
   });
   iziToast.success({
     title: 'Success',

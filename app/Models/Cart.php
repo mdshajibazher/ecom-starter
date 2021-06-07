@@ -13,7 +13,7 @@ class Cart extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function ProductVariantPrice(){
-        return $this->belongsTo(ProductVariantPrice::class);
+    public function ProductVariantCombination(){
+        return $this->belongsTo(ProductVariantCombination::class);
     }
 }

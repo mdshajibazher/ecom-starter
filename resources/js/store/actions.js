@@ -21,14 +21,15 @@ export const getProduct = ({commit},product_id) => {
     // })
 }
 
-export const addProductToCart = ({commit}, {product,qty,product_variant_price}) => {
+export const addProductToCart = ({commit}, {product,qty,product_variant_combination}) => {
     axios.post('/add_to_cart/',{
         product_id: product.id,
         qty,
-        product_variant_price_id: product_variant_price.id,
+        product_variant_combination_id: product_variant_combination.id,
     })
     .then( (res) => {
-        commit('ADD_TO_CART',{product,qty,product_variant_price})
+        console.log(res);
+        commit('ADD_TO_CART',{product,qty,product_variant_combination})
     })
     .catch( e => {
         iziToast.error({

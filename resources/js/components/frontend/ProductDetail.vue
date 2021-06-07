@@ -15,24 +15,7 @@
 										<table class="table table-borderless table-sm">
 											<tr>
 												<td>Variation: </td>
-												<td>
-													<table class="table table-bordered table-sm table-light">
-														<tr v-if="price.variant_one!=null">
-															<th>{{price.variant_one.variant_label.title}} : </th>
-															<td> {{price.variant_one.variant.toUpperCase()}}</td>
-														</tr>
-
-														<tr v-if="price.variant_two!=null">
-															<th>{{price.variant_two.variant_label.title}} : </th>
-															<td>{{price.variant_two.variant.toUpperCase()}}</td>
-														</tr>
-
-														<tr v-if="price.variant_three!=null">
-															<th>{{price.variant_three.variant_label.title}} : </th>
-															<td>{{price.variant_three.variant.toUpperCase()}}</td>
-														</tr>
-													</table>
-                                                </td>
+												<td> {{price.label}}</td>
 											</tr>
 											<tr>
 												<td>Price: </td>
@@ -126,8 +109,8 @@ export default {
 		LoginComponent,
 	},
     methods: {
-		addToCart(product,product_variant_price){
-			this.buttonLoader = product_variant_price.id;
+		addToCart(product,product_variant_combination){
+			this.buttonLoader = product_variant_combination.id;
 			axios.get('/is_logged_in')
 			.then(({data}) => {
 				if(data == true){
@@ -135,7 +118,7 @@ export default {
 					this.$store.dispatch('addProductToCart',{
 					product,
 					qty: 1,
-					product_variant_price,
+					product_variant_combination,
 					})
 					// this.buttonLoader = false;
 				}else{

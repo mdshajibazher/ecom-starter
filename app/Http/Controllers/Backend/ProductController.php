@@ -157,13 +157,8 @@ class ProductController extends Controller
                     ]);
                 }
             }
-
-            $ids=array_column($request->product_variant, 'option');
-            $product->productvariants()->detach($ids);
-            $product_variant_ids=$this->insertProductVariant($request,$product_id);
-
             $product->prices()->delete();
-            $this->insertProductVariantPrices($request,$product_variant_ids,$product_id);
+            $this->insertProductVariantCombinations($request,$product_id);
             $this->SyncSubcollection($request,$product);
             $this->SyncSizes($request, $product);
             $this->SyncColors($request, $product);

@@ -1,6 +1,6 @@
-export const ADD_TO_CART = (state,{product,qty,product_variant_price}) => {
+export const ADD_TO_CART = (state,{product,qty,product_variant_combination}) => {
     let product_in_cart = state.cart.find((item) => {
-        return item.product.id == product.id &&  item.product_variant_price.id == product_variant_price.id;
+        return item.product.id == product.id &&  item.product_variant_combination.id == product_variant_combination.id;
     })
 
     if(product_in_cart){
@@ -12,7 +12,7 @@ export const ADD_TO_CART = (state,{product,qty,product_variant_price}) => {
         });
         return;
     }
-    state.cart.push({product,qty,product_variant_price})
+    state.cart.push({product,qty,product_variant_combination})
     iziToast.success({
         title: 'Success',
          position: 'topRight',
@@ -28,9 +28,9 @@ export const IS_LOGGED_IN = (state, status) => {
     state.is_logged_in = status;
 }
 
-export const REMOVE_PRODUCT_FROM_CART = (state, product_variant_price_id) => {
+export const REMOVE_PRODUCT_FROM_CART = (state, product_variant_combination_id) => {
     state.cart = state.cart.filter( item => {
-        return item.product_variant_price.id !== product_variant_price_id;
+        return item.product_variant_combination.id !== product_variant_combination_id;
     })
     iziToast.success({
         title: 'Success',

@@ -6,7 +6,7 @@ export const CartTotalPrice = (state) => {
     let total = 0;
     // if(state.cart){
         state.cart.forEach((item) => {
-            total += parseFloat(item.product_variant_price.price) * parseFloat(item.qty);
+            total += parseFloat(item.product_variant_combination.price) * parseFloat(item.qty);
         });
     // }
     return total;

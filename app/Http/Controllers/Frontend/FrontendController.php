@@ -18,7 +18,7 @@ class FrontendController extends Controller
     }
 
     public function ProductDetails($id){
-        $products = Product::with('variants','productvariants','prices.variant_one.variantLabel','prices.variant_two.variantLabel','prices.variant_three.variantLabel','images','Subcollections','collection')->findOrFail($id);
+        $products = Product::with('prices.color','prices.size','images','Subcollections','Collection')->findOrFail($id);
         $is_loggedin = Auth::check();
         return ['products' => $products,'is_logged_in' => $is_loggedin];
     }
@@ -30,7 +30,7 @@ class FrontendController extends Controller
 
     public function addToCart(Request $request){
         if(Auth::check()){
-            $cart = Cart::where('product_id', $request->product_id)->where('product_variant_price_id', $request->product_variant_price_id)->where('user_id', Auth::user()->id);
+            $cart = Cart::where('product_id', $request->product_id)->where('product_variant_combination_id', $request->product_variant_combination_id)->where('user_id', Auth::user()->id);
 
             if ($cart->count()) {
                 $cart->increment('qty');
@@ -39,7 +39,7 @@ class FrontendController extends Controller
                 $cart = new Cart;
                 $cart->user_id = Auth::user()->id;
                 $cart->product_id =$request->product_id;
-                $cart->product_variant_price_id = $request->product_variant_price_id;
+                $cart->product_variant_combination_id = $request->product_variant_combination_id;
                 $cart->qty = $request->qty;
                 $cart->save();
             }
@@ -50,9 +50,9 @@ class FrontendController extends Controller
 
     }
 
-    public function removeCartItem($product_variant_price_id){
+    public function removeCartItem($product_variant_combination_id){
         if(Auth::check()){
-            $remove_item =  Cart::where('user_id',Auth::user()->id)->where('product_variant_price_id', $product_variant_price_id)->delete();
+            $remove_item =  Cart::where('user_id',Auth::user()->id)->where('product_variant_combination_id', $product_variant_combination_id)->delete();
             return $remove_item;
          }
          return [];
@@ -60,7 +60,7 @@ class FrontendController extends Controller
 
     public function getCartItems(){
         if(Auth::check()){
-           return  Cart::with('Product','Product.images','ProductVariantPrice.variant_one','ProductVariantPrice.variant_two','ProductVariantPrice.variant_three')->where('user_id',Auth::user()->id)->get();
+           return  Cart::with('Product','Product.images','ProductVariantCombination')->where('user_id',Auth::user()->id)->get();
         }
         return [];
     }

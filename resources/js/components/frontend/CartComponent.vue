@@ -14,18 +14,15 @@
                     <div class="top-cart-item-desc">
                         <div class="top-cart-item-desc-title">
                             <a href="#">{{item.product.title}}</a>
+
                               <span class="top-cart-item-price d-block text-uppercase">
-                                 <span v-if="item.product_variant_price.variant_one" class="badge badge-dark mb-0">{{ item.product_variant_price.variant_one.variant}} </span>
-                                 <span v-if="item.product_variant_price.variant_two" class="badge badge-primary mb-0">
-                                 {{item.product_variant_price.variant_two.variant}} </span>
-                                 <span v-if="item.product_variant_price.variant_three" class="badge badge-info mb-0" >
-                                 {{item.product_variant_price.variant_three.variant}}
+                                 <span class="badge badge-dark mb-0">{{ item.product_variant_combination.label}} 
                                  </span>
                               </span>
-                            <span class="top-cart-item-price d-block">{{item.product_variant_price.price}} x {{item.qty}} = {{item.product_variant_price.price*item.qty}} Tk. </span>
+                            <span class="top-cart-item-price d-block">{{item.product_variant_combination.price}} x {{item.qty}} = {{item.product_variant_combination.price*item.qty}} Tk. </span>
                         </div>
                         <div class="top-cart-item-quantity">
-                          <button @click.prevent="removeProductFromCart(item.product_variant_price.id)" type="button" class="btn btn-sm btn-danger">x</button> 
+                          <button @click.prevent="removeProductFromCart(item.product_variant_combination.id)" type="button" class="btn btn-sm btn-danger">x</button> 
                         </div>
                     </div>
                 </div>
@@ -49,8 +46,8 @@ export default {
         this.$store.dispatch('getCartItem');
     },
     methods:{
-        removeProductFromCart(product_variant_price_id){
-            this.$store.dispatch('removeProductFromCart',product_variant_price_id)
+        removeProductFromCart(product_variant_combination_id){
+            this.$store.dispatch('removeProductFromCart',product_variant_combination_id)
         }
     },
     computed: {
