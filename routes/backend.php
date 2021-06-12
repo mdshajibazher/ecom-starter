@@ -33,8 +33,6 @@ Route::middleware([checkAdmin::class])->group(function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 //Product Section
-
-
 Route::resource('product-variant',VariantController::class);
 //subcollections 
 Route::resource('subcollections',SubcollectionController::class)->except(['create','edit','show']);
@@ -50,6 +48,7 @@ Route::get('/getlabels',[LabelController::class,'getLabels']);
 Route::get('/labels/{query_field}/{query}',[LabelController::class,'search']);
 
 Route::resource('product', ProductController::class);
+Route::post('product/variant/upload_temp_image',[ProductController::class,'uploadTempImage']);
 Route::post('product/{id}/deleteimages', [ProductController::class,'deleteImages']);
 Route::get('/getproducts',[ProductController::class,'getProducts']);
 Route::get('/products/{query_field}/{query}',[ProductController::class,'search']);

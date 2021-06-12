@@ -1,7 +1,7 @@
 <template>
     <section>
             <div class="row" @keydown="errorFree()">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="card shadow mb-4">
                         <div class="card-body">
                             <div class="form-group">
@@ -59,7 +59,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold text-primary">Variants</h6>
@@ -103,6 +103,7 @@
                                         <td>Variant</td>
                                         <td>Price</td>
                                         <td>Stock</td>
+                                        <td>Image</td>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -113,6 +114,9 @@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" v-model="combination.stock">
+                                        </td>
+                                        <td>
+                                            <a @click="addVariantImage(index,combination)" href="javascript:void(0)">Add Image</a>    
                                         </td>
                                     </tr>
                                     </tbody>
@@ -259,6 +263,10 @@ export default {
                 title: 'Success',
                 message: "Image upload success",
             });
+        },
+
+        addVariantImage(index, combination){
+            this.$root.$emit('VARIANT_IMAGE_MODAL_POPUP',index,combination);
         },
         getSubCollectionbyId(){
             this.sub_collections = "";

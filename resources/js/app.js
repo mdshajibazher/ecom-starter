@@ -3,6 +3,7 @@ window.Vue = require('vue');
 
 /*v-form*/
 import { HasError, AlertError } from 'vform'
+import Vue from 'vue';
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
 
@@ -24,6 +25,7 @@ Vue.component('ProductSubcollections', require('./components/backend/ProductSubc
 Vue.component('SubcollectionLabel', require('./components/backend/SubcollectionLabel').default);
 Vue.component('vue-modal', () => import('./components/modal/VueModal'));
 Vue.component('pagination', require('laravel-vue-pagination'));
+Vue.component('VariantImageUploader',require('./components/backend/_product/VariantImageUploader').default)
 
 
 

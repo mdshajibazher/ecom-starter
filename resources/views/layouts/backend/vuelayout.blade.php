@@ -31,12 +31,12 @@
     </div>
     <!-- set progressbar -->
     <vue-progress-bar></vue-progress-bar>
-
+    @yield('modal')
 </div>
 <!-- Scripts -->
 
 <script src="{{ asset('js/app.js') }}"></script>
-{{-- <script src="{{ asset('js/backend.js') }}"></script> --}}
+<script src="{{ asset('js/backend.js') }}"></script>
 @stack('js')
 
 </body>

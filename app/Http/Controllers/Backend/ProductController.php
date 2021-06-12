@@ -212,4 +212,8 @@ class ProductController extends Controller
         }
         return "Product Image Deleted Successfully";
     }
+
+    public function uploadTempImage(Request $request){
+        dd($request->all());
+    }
 }
