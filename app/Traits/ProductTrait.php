@@ -100,48 +100,13 @@ trait ProductTrait{
                 'color_id' => $combination['color']['id'],
                 'price' => $combination['price'],
                 'stock' => $combination['stock'],
+                'image' => $combination['image'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         }
 
-        // $prices=$request->product_variant_prices;
-        // $cross_products=collect($product_variant_ids[0]);
 
-        // if (array_key_exists(1,$product_variant_ids) && array_key_exists(2,$product_variant_ids)) {
-        //     $cross_products=$cross_products->crossJoin($product_variant_ids[1],$product_variant_ids[2]);
-        // }elseif (array_key_exists(1,$product_variant_ids)) {
-        //     $cross_products=$cross_products->crossJoin($product_variant_ids[1]);
-        // }
-        // if (count($product_variant_ids) < 2) 
-        // {
-        //     foreach ($cross_products as $index => $value) {
-        //         ProductVariantPrice::insert([
-        //             $this->variants[$index]=>$value,
-        //             'price'=>$prices[$index]['price'],
-        //             'stock'=>$prices[$index]['stock'],
-        //             'product_id'=>$product_id
-        //          ]);
-        //     }
-        // }
-        // else
-        // {
-        //     //return count($product_variant_ids);
-        //     $product_prices=collect([]);
-        //     foreach ($cross_products as $key => $cross_product) {
-        //         $vrnt=[];
-        //         foreach ($cross_product as $tk => $tv) {
-        //             $vrnt[$this->variants[$tk]]=$tv;
-        //         }
-        //         $product_prices[$key]=array_merge($vrnt,[
-        //                 'price'=>$prices[$key]['price'],
-        //                 'stock'=>$prices[$key]['stock'],
-        //                 'product_id'=>$product_id
-        //             ]);
-        //     }
-        //     ProductVariantPrice::insert($product_prices->toArray());
-        //     return response()->json(['success'=>true,200]);
-        // }
     }
 
     private function data_validate($request,$id=null)

@@ -18,7 +18,7 @@ class FrontendController extends Controller
     }
 
     public function ProductDetails($id){
-        $products = Product::with('prices.color','prices.size','images','Subcollections','Collection')->findOrFail($id);
+        $products = Product::with('sizes','colors','prices.color','prices.size','images','Subcollections','Collection')->findOrFail($id);
         $is_loggedin = Auth::check();
         return ['products' => $products,'is_logged_in' => $is_loggedin];
     }

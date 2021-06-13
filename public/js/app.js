@@ -2165,6 +2165,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2180,6 +2186,15 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
+    this.$root.$on('UPLOADED_VARIANT_IMAGE_DATA', function (image_location, variant_index) {
+      _this.variant_combinations[variant_index].image = image_location;
+      $("#imageUploaderModal").modal('hide');
+      iziToast.success({
+        title: 'Success',
+        position: 'topRight',
+        message: image_location + ' added to ' + _this.variant_combinations[variant_index].combination
+      });
+    });
     this.colors = this.colors_props;
     this.sizes = this.sizes_props;
 
@@ -2207,7 +2222,8 @@ __webpack_require__.r(__webpack_exports__);
           size: value.size,
           color: value.color,
           price: value.price,
-          stock: value.stock
+          stock: value.stock,
+          image: value.image
         });
       });
       /*images*/
@@ -2291,7 +2307,19 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addVariantImage: function addVariantImage(index, combination) {
-      this.$root.$emit('VARIANT_IMAGE_MODAL_POPUP', index, combination);
+      var variant_data = {
+        index: index,
+        combination: combination
+      };
+      this.$root.$emit('VARIANT_IMAGE_MODAL_POPUP', variant_data);
+    },
+    changeVariantImage: function changeVariantImage(index, combination, old_image) {
+      var variant_data = {
+        index: index,
+        combination: combination,
+        old_image: old_image
+      };
+      this.$root.$emit('VARIANT_IMAGE_MODAL_POPUP', variant_data);
     },
     getSubCollectionbyId: function getSubCollectionbyId() {
       var _this2 = this;
@@ -2380,7 +2408,8 @@ __webpack_require__.r(__webpack_exports__);
             size: size,
             color: color,
             price: 0,
-            stock: 0
+            stock: 0,
+            image: ""
           });
         });
       });
@@ -3910,17 +3939,22 @@ __webpack_require__.r(__webpack_exports__);
     return {
       variantImage: [],
       index: "",
-      combination: []
+      combination: [],
+      old_image: "",
+      disabled: false
     };
   },
   mounted: function mounted() {
     var _this = this;
 
-    this.$root.$on('VARIANT_IMAGE_MODAL_POPUP', function (index, combination) {
-      console.log(index);
-      console.log(combination);
-      _this.index = index;
-      _this.combination = combination;
+    $("span.has-icon").click();
+    this.$root.$on('VARIANT_IMAGE_MODAL_POPUP', function (varinat_data) {
+      if (varinat_data.old_image) {
+        _this.old_image = varinat_data.old_image;
+      }
+
+      _this.index = varinat_data.index;
+      _this.combination = varinat_data.combination;
       $("#imageUploaderModal").modal('show');
     });
   },
@@ -3929,17 +3963,34 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     uploadImage: function uploadImage() {
+      var _this2 = this;
+
       if (this.variantImage.length < 1) {
         alert('please select a image');
         return;
       }
 
-      axios.post('/app/product/variant/upload_temp_image', {
-        variant_image: this.variantImage[0]
-      }).then(function (res) {
-        console.log(res);
+      var varinat_combination_data = {};
+      this.disabled = true;
+      this.old_image ? varinat_combination_data = {
+        variant_image: this.variantImage,
+        old_image: this.old_image
+      } : varinat_combination_data = {
+        variant_image: this.variantImage
+      };
+      axios.post('/app/product/variant/upload_temp_image', varinat_combination_data).then(function (res) {
+        _this2.$root.$emit('UPLOADED_VARIANT_IMAGE_DATA', res.data, _this2.index);
+
+        $("span.has-icon").click();
+        _this2.disabled = false;
       })["catch"](function (e) {
+        iziToast.error({
+          title: 'Error',
+          position: 'topRight',
+          message: e.response.data.message
+        });
         console.log(e.response.data.message);
+        _this2.disabled = false;
       });
     }
   }
@@ -8539,7 +8590,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.vue-dropzone.is-invalid[data-v-59de8a86]{\n        border-color: red !important;\n}\n.multiselect.is-invalid[data-v-59de8a86]{\n    border: 1px solid red;\n    border-radius: 5px;\n}\n", ""]);
+exports.push([module.i, "\n.vue-dropzone.is-invalid[data-v-59de8a86]{\n        border-color: red !important;\n}\n.multiselect.is-invalid[data-v-59de8a86]{\n    border: 1px solid red;\n    border-radius: 5px;\n}\n.change-image[data-v-59de8a86]{\n    position: absolute;\n    top: 50%;\n    right: 0;\n    margin-top: -9px;\n}\n.variant-image[data-v-59de8a86]{\n    width: 50px;\n}\n\n", ""]);
 
 // exports
 
@@ -47428,18 +47479,52 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("td", [
-                          _c(
-                            "a",
-                            {
-                              attrs: { href: "javascript:void(0)" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.addVariantImage(index, combination)
-                                }
-                              }
-                            },
-                            [_vm._v("Add Image")]
-                          )
+                          combination.image
+                            ? _c("div", { staticClass: "position-relative" }, [
+                                _c("img", {
+                                  staticClass: "variant-image",
+                                  attrs: {
+                                    src:
+                                      "/images/products/variant/thumb/" +
+                                      combination.image,
+                                    alt: combination.size.title
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass:
+                                      "badge badge-danger change-image",
+                                    attrs: { href: "javascript:void(0)" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeVariantImage(
+                                          index,
+                                          combination,
+                                          combination.image
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("change")]
+                                )
+                              ])
+                            : _c(
+                                "a",
+                                {
+                                  attrs: { href: "javascript:void(0)" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.addVariantImage(
+                                        index,
+                                        combination
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Add Image")]
+                              )
                         ])
                       ])
                     }),
@@ -49668,7 +49753,7 @@ var render = function() {
         "button",
         {
           staticClass: "btn btn-warning btn-lg btn-block",
-          attrs: { type: "button" },
+          attrs: { disabled: _vm.disabled, type: "button" },
           on: { click: _vm.uploadImage }
         },
         [_vm._v("Upload")]

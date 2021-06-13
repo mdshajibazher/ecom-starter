@@ -116,7 +116,13 @@
                                             <input type="text" class="form-control" v-model="combination.stock">
                                         </td>
                                         <td>
-                                            <a @click="addVariantImage(index,combination)" href="javascript:void(0)">Add Image</a>    
+                                            <div v-if="combination.image" class="position-relative">
+                                                <img class="variant-image" :src="'/images/products/variant/thumb/'+combination.image" :alt="combination.size.title">
+                                                <a @click="changeVariantImage(index,combination,combination.image )" href="javascript:void(0)" class="badge badge-danger change-image">change</a>
+                                            </div>
+
+                                            <a v-else @click="addVariantImage(index,combination)" href="javascript:void(0)">Add Image</a> 
+                         
                                         </td>
                                     </tr>
                                     </tbody>
@@ -150,6 +156,15 @@ export default {
 
     },
     mounted() {
+        this.$root.$on('UPLOADED_VARIANT_IMAGE_DATA',(image_location,variant_index) => {
+            this.variant_combinations[variant_index].image = image_location;
+            $("#imageUploaderModal").modal('hide');
+            iziToast.success({
+                title: 'Success',
+                position: 'topRight',
+                message: image_location+' added to '+ this.variant_combinations[variant_index].combination,
+            });
+        })
         this.colors = this.colors_props;
         this.sizes = this.sizes_props;
         if (this.edit_mode==false) {
@@ -177,6 +192,7 @@ export default {
                     color: value.color,
                     price: value.price,
                     stock: value.stock,
+                    image: value.image,
                 })
             })
             
@@ -266,7 +282,19 @@ export default {
         },
 
         addVariantImage(index, combination){
-            this.$root.$emit('VARIANT_IMAGE_MODAL_POPUP',index,combination);
+            let variant_data = {
+                index: index,
+                combination: combination,
+            }
+            this.$root.$emit('VARIANT_IMAGE_MODAL_POPUP',variant_data);
+        },
+        changeVariantImage(index, combination,old_image){
+            let variant_data = {
+                index: index,
+                combination: combination,
+                old_image: old_image,
+            }
+            this.$root.$emit('VARIANT_IMAGE_MODAL_POPUP',variant_data);
         },
         getSubCollectionbyId(){
             this.sub_collections = "";
@@ -351,6 +379,7 @@ export default {
                        color: color,
                        price: 0,
                        stock: 0,
+                       image: "",
                    })
                 })
             })
@@ -461,4 +490,14 @@ export default {
     border: 1px solid red;
     border-radius: 5px;
 }
+.change-image{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -9px;
+}
+.variant-image{
+    width: 50px;
+}
+
 </style>

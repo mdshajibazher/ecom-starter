@@ -1,4 +1,5 @@
 @extends('layouts.backend.vuelayout')
+@section('title','Create product')
 @section('modal')
 <!-- Modal -->
 <div class="modal fade" id="imageUploaderModal" tabindex="-1" aria-labelledby="imageUploaderModalLabel" aria-hidden="true">
@@ -6,6 +7,9 @@
       <div class="modal-content">
         <div class="modal-body">
           <variant-image-uploader/>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

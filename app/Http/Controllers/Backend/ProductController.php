@@ -11,6 +11,7 @@ use App\Models\Color;
 use App\Models\Product;
 use App\Models\Variant;
 use App\Models\Collection;
+use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use App\Traits\ProductTrait;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ use App\Models\ProductVariant;
 use App\Models\ProductVariantPrice;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
 {
@@ -79,7 +81,6 @@ class ProductController extends Controller
             $this->AttachSubcollection($request, $product);
             $this->AttachSizes($request, $product);
             $this->AttachColors($request, $product);
-            $this->AttachSubcollection($request, $product);
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollback();
@@ -214,6 +215,38 @@ class ProductController extends Controller
     }
 
     public function uploadTempImage(Request $request){
-        dd($request->all());
+        if($request->old_image){
+            //Old Image Location
+            $old_original_location = 'images/products/variant/original/'.$request->old_image;
+            $old_resized_location = 'images/products/variant/resized/'.$request->old_image;
+            $old_thumb_location = 'images/products/variant/thumb/'.$request->old_image;
+
+            //Delete Old Image
+            if (File::exists($old_original_location)) {
+                File::delete($old_original_location);
+            }
+            if (File::exists($old_resized_location)) {
+                File::delete($old_resized_location);
+            }
+            if (File::exists($old_thumb_location)) {
+                File::delete($old_thumb_location);
+            }
+        }
+        if($request->variant_image){
+            $image = $request->variant_image[0];
+            $image_position = strpos($request->variant_image[0], ';');
+            $sub= substr($request->variant_image[0], 0 ,$image_position);
+            $image_extension =explode('/', $sub)[1];
+            $image_name = "variant-".rand(1,1000)."-".time().".".$image_extension;
+
+            $original_location = 'images/products/variant/original/'.$image_name;
+            $resized_location = 'images/products/variant/resized/'.$image_name;
+            $thumb_location = 'images/products/variant/thumb/'.$image_name;
+
+            Image::make($image)->save($original_location);
+            Image::make($image)->fit(440,586)->save($resized_location);
+            Image::make($image)->fit(80,80)->save($thumb_location);
+            return $image_name;
+        }
     }
 }

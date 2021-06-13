@@ -21,6 +21,7 @@ class CreateProductVariantCombinationsTable extends Migration
             $table->foreignId('color_id')->constrained()->onDelete('cascade');
             $table->double('price');
             $table->integer('stock')->default(0);
+            $table->string('image')->default('varint.jpg');
             $table->timestamps();
         });
     }
