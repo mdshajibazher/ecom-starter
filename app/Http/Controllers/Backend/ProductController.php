@@ -136,7 +136,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-
         $product_id=$product->id;
         $this->data_validate($request, $product_id);
         DB::beginTransaction();

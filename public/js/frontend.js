@@ -2169,21 +2169,69 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var _this = this;
 
-    this.$root.$on('PRODUCT_ID_EVENT_BUS', function (id) {
-      axios.get('/product_details/' + id).then(function (_ref) {
+    this.$root.$on("PRODUCT_ID_EVENT_BUS", function (id) {
+      axios.get("/product_details/" + id).then(function (_ref) {
         var data = _ref.data;
         _this.userData = {};
         _this.productDetails = data.products;
         _this.collection = data.products.collection;
         _this.PricesAndStockData = data.products.prices;
         _this.is_logged_in = data.is_logged_in;
-        _this.LoginMode = false, _this.RegisterMode = false, $("#productModal").modal('show');
+        _this.LoginMode = false, _this.RegisterMode = false, //set initila data 
+        _this.productColor = _this.productDetails.prices[0].color_id;
+        _this.productSize = _this.productDetails.prices[0].size_id;
+        $("#productModal").modal("show");
       })["catch"](function (e) {
         e.response.data.message;
       });
@@ -2192,7 +2240,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       productDetails: [],
-      collection: '',
+      collection: "",
       userData: {},
       PricesAndStockData: [],
       is_logged_in: false,
@@ -2204,47 +2252,55 @@ __webpack_require__.r(__webpack_exports__);
       productImage: ""
     };
   },
-  props: ['postTitle'],
+  props: ["postTitle"],
   components: {
     RegisterComponent: _RegisterComponet__WEBPACK_IMPORTED_MODULE_1__["default"],
     LoginComponent: _LoginComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  // computed: {
-  // 	fullName: function () {
-  // 	return this.firstName + ' ' + this.lastName
-  // 	}
-  // },
-  methods: {
-    addToCart: function addToCart(product, product_variant_combination) {
+  computed: {
+    selectedProduct: function selectedProduct() {
       var _this2 = this;
 
+      if (this.productColor && this.productSize) {
+        return this.productDetails.prices.find(function (price_stock_info) {
+          return price_stock_info.color_id == _this2.productColor && price_stock_info.size_id == _this2.productSize;
+        });
+      }
+
+      return "";
+    }
+  },
+  methods: {
+    addToCart: function addToCart(product, product_variant_combination) {
+      var _this3 = this;
+
       this.buttonLoader = product_variant_combination.id;
-      axios.get('/is_logged_in').then(function (_ref2) {
+      axios.get("/is_logged_in").then(function (_ref2) {
         var data = _ref2.data;
 
         if (data == true) {
-          _this2.buttonLoader = "";
+          _this3.buttonLoader = "";
 
-          _this2.$store.dispatch('addProductToCart', {
+          _this3.$store.dispatch("addProductToCart", {
             product: product,
             qty: 1,
             product_variant_combination: product_variant_combination
           }); // this.buttonLoader = false;
 
         } else {
-          _this2.RegisterMode = true;
-          _this2.buttonLoader = "";
+          _this3.RegisterMode = true;
+          _this3.buttonLoader = "";
           iziToast.warning({
-            title: 'Warning',
-            position: 'topRight',
-            message: 'Please register/login before order'
+            title: "Warning",
+            position: "topRight",
+            message: "Please register/login before order"
           });
         }
       })["catch"](function (e) {
-        _this2.buttonLoader = "";
+        _this3.buttonLoader = "";
         iziToast.error({
-          title: 'Error',
-          position: 'topRight',
+          title: "Error",
+          position: "topRight",
           message: e.response.data.message
         });
       });
@@ -2672,7 +2728,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.atc[data-v-ca4b6164] {\n    display: inline-block;\n    border: 0;\n    outline: 0;\n    padding: 3px 10px;\n    line-height: 1.4;\n    background: linear-gradient(#44bc9c,#079992);\n    border-radius: 5px;\n    font-family: \"Lucida Grande\", \"Lucida Sans Unicode\", Tahoma, Sans-Serif;\n    color: white !important;\n    font-size: 1.2em;\n    cursor: pointer;\n    /* Important part */\n    position: relative;\n    transition: padding-right .3s ease-out;\n}\n.atc.loading[data-v-ca4b6164] {\n    background-color: #CCC;\n    padding-right: 40px;\n}\n.atc.loading[data-v-ca4b6164]:after {\n    content: \"\";\n    position: absolute;\n    border-radius: 100%;\n    right: 6px;\n    top: 50%;\n    width: 0px;\n    height: 0px;\n    margin-top: -2px;\n    border: 4px solid rgba(255,255,255,0.5);\n    border-left-color: #FFF;\n    border-top-color: #FFF;\n    -webkit-animation: spin-data-v-ca4b6164 .6s infinite linear,grow-data-v-ca4b6164 .3s forwards ease-out;\n            animation: spin-data-v-ca4b6164 .6s infinite linear,grow-data-v-ca4b6164 .3s forwards ease-out;\n}\n@-webkit-keyframes spin-data-v-ca4b6164 {\nto {\n        transform: rotate(359deg);\n}\n}\n@keyframes spin-data-v-ca4b6164 {\nto {\n        transform: rotate(359deg);\n}\n}\n@-webkit-keyframes grow-data-v-ca4b6164 {\nto {\n        width: 16px;\n        height: 16px;\n        margin-top: -8px;\n        right: 13px;\n}\n}\n@keyframes grow-data-v-ca4b6164 {\nto {\n        width: 16px;\n        height: 16px;\n        margin-top: -8px;\n        right: 13px;\n}\n}\n\n/* color switch */\n.c-color-swatch__item[data-v-ca4b6164] {\n\twidth: auto;\n\ttext-align: center;\n\t-webkit-user-select: none;\n\t   -moz-user-select: none;\n\t    -ms-user-select: none;\n\t        user-select: none;\n\tposition: relative;\n\ttransition: transform .25s;\n\tcolor: #fff;\n\t/* width:  28px;\n\theight: 28px; */\n\tborder-radius: 100%;\n\tpadding: 5px 10px;\n\tborder-radius: 4px;\n\tdisplay: block;\n\tmargin-right: 5px;\n}\n.c-color-swatch__item[data-v-ca4b6164]:hover {\n\tz-index: 1;\n\ttransform: scale(1.1);\n}\n.c-color-swatch [type=\"radio\"]:checked + .c-color-swatch__item[data-v-ca4b6164]{\n\tbackground: #fff;\n\tborder: 2px solid #ddd !important;\n}\n.c-color-swatch [type=\"radio\"]:checked + label[data-v-ca4b6164]:after {\n    content: 'selected';\n    width: 10px;\n    height: 10px;\n    padding: 2px 4px;\n    background: #000;\n    border-radius: 5px;\n    margin-left: 7px;\n    font-size: 9px;\n}\n/* size swatch */\n.c-size-swatch__item[data-v-ca4b6164] {\n\twidth: auto;\n\ttext-align: center;\n\t-webkit-user-select: none;\n\t   -moz-user-select: none;\n\t    -ms-user-select: none;\n\t        user-select: none;\n\ttransition: transform .25s;\n\tcolor: #000;\n\t/* width:  28px;\n\theight: 28px; */\n\tborder-radius: 100%;\n\tpadding: 5px 10px;\n\tborder-radius: 4px;\n\tdisplay: inline-block;\n\tmargin-right: 5px;\n\tborder: 1px solid #000;\n}\n.c-size-swatch [type=\"radio\"]:checked + .c-size-swatch__item[data-v-ca4b6164]{\n\tbackground: #000;\n\tcolor: #fff;\n\tborder-radius: 5px;\n}\n\n", ""]);
+exports.push([module.i, "\n.atc[data-v-ca4b6164] {\n  display: inline-block;\n  border: 0;\n  outline: 0;\n  padding: 3px 10px;\n  line-height: 1.4;\n  background: linear-gradient(#44bc9c, #079992);\n  border-radius: 5px;\n  font-family: \"Lucida Grande\", \"Lucida Sans Unicode\", Tahoma, Sans-Serif;\n  color: white !important;\n  font-size: 1.2em;\n  cursor: pointer;\n  /* Important part */\n  position: relative;\n  transition: padding-right 0.3s ease-out;\n}\n.atc[data-v-ca4b6164]:disabled {\n  background: #ccc !important;\n}\n.atc.loading[data-v-ca4b6164] {\n  background-color: #ccc;\n  padding-right: 40px;\n}\n.atc.loading[data-v-ca4b6164]:after {\n  content: \"\";\n  position: absolute;\n  border-radius: 100%;\n  right: 6px;\n  top: 50%;\n  width: 0px;\n  height: 0px;\n  margin-top: -2px;\n  border: 4px solid rgba(255, 255, 255, 0.5);\n  border-left-color: #fff;\n  border-top-color: #fff;\n  -webkit-animation: spin-data-v-ca4b6164 0.6s infinite linear,grow-data-v-ca4b6164 0.3s forwards ease-out;\n          animation: spin-data-v-ca4b6164 0.6s infinite linear,grow-data-v-ca4b6164 0.3s forwards ease-out;\n}\n@-webkit-keyframes spin-data-v-ca4b6164 {\nto {\n    transform: rotate(359deg);\n}\n}\n@keyframes spin-data-v-ca4b6164 {\nto {\n    transform: rotate(359deg);\n}\n}\n@-webkit-keyframes grow-data-v-ca4b6164 {\nto {\n    width: 16px;\n    height: 16px;\n    margin-top: -8px;\n    right: 13px;\n}\n}\n@keyframes grow-data-v-ca4b6164 {\nto {\n    width: 16px;\n    height: 16px;\n    margin-top: -8px;\n    right: 13px;\n}\n}\n\n/* color switch */\n.c-color-swatch__item[data-v-ca4b6164] {\n  width: auto;\n  text-align: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  position: relative;\n  transition: transform 0.25s;\n  color: #fff;\n  /* width:  28px;\n\theight: 28px; */\n  border-radius: 100%;\n  padding: 5px 10px;\n  border-radius: 4px;\n  display: block;\n  margin-right: 5px;\n}\n.c-color-swatch__item[data-v-ca4b6164]:hover {\n  z-index: 1;\n  transform: scale(1.1);\n}\n.c-color-swatch [type=\"radio\"]:checked + .c-color-swatch__item[data-v-ca4b6164] {\n  background: #fff;\n  border: 2px solid #ddd !important;\n}\n.c-color-swatch [type=\"radio\"]:checked + label[data-v-ca4b6164]:after {\n  content: \"selected\";\n  width: 10px;\n  height: 10px;\n  padding: 2px 4px;\n  background: #000;\n  border-radius: 5px;\n  margin-left: 7px;\n  font-size: 9px;\n}\n/* size swatch */\n.c-size-swatch__item[data-v-ca4b6164] {\n  width: auto;\n  text-align: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: transform 0.25s;\n  color: #000;\n  /* width:  28px;\n\theight: 28px; */\n  border-radius: 100%;\n  padding: 5px 10px;\n  border-radius: 4px;\n  display: inline-block;\n  margin-right: 5px;\n  border: 1px solid #000;\n}\n.c-size-swatch [type=\"radio\"]:checked + .c-size-swatch__item[data-v-ca4b6164] {\n  background: #000;\n  color: #fff;\n  border-radius: 5px;\n}\n", ""]);
 
 // exports
 
@@ -5368,222 +5424,271 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "single-product shop-quick-view-ajax" }, [
-    _c(
-      "div",
-      { staticClass: "product modal-padding" },
-      [
-        _c("h3", [_vm._v(_vm._s(_vm.productDetails.title))]),
-        _vm._v(" "),
-        _vm._l(_vm.productDetails.images, function(image, index) {
-          return _c("img", {
-            key: index,
-            staticClass: "img-thumbnail",
-            staticStyle: { width: "25%", "margin-right": "10px" },
-            attrs: {
-              src: "/images/products/thumb/" + image.file_path,
-              alt: "Pink Printed Dress"
-            }
-          })
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-6" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("div", { staticClass: "form-group mt-3" }, [
-                _c("h4", [_vm._v("Select Color")]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "c-color-swatch" },
-                  _vm._l(_vm.productDetails.colors, function(color) {
-                    return _c("div", { key: color.id }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.productColor,
-                            expression: "productColor"
-                          }
-                        ],
-                        attrs: {
-                          type: "radio",
-                          name: "color",
-                          id: "color-" + color.color_code,
-                          hidden: ""
+    _c("div", { staticClass: "product modal-padding" }, [
+      _c("h3", { staticClass: "text-center text-bold" }, [
+        _vm._v(_vm._s(_vm.productDetails.title))
+      ]),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _vm.LoginMode == false && _vm.RegisterMode == false
+        ? _c("div", [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-6" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("div", { staticClass: "form-group mt-3" }, [
+                    _c("h4", [_vm._v("Select Color")]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "c-color-swatch" },
+                      _vm._l(_vm.productDetails.colors, function(color) {
+                        return _c("div", { key: color.id }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.productColor,
+                                expression: "productColor"
+                              }
+                            ],
+                            attrs: {
+                              type: "radio",
+                              name: "color",
+                              id: "color-" + color.color_code,
+                              hidden: ""
+                            },
+                            domProps: {
+                              value: color.id,
+                              checked: _vm._q(_vm.productColor, color.id)
+                            },
+                            on: {
+                              change: function($event) {
+                                _vm.productColor = color.id
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "c-color-swatch__item",
+                              style: { background: color.color_code },
+                              attrs: { for: "color-" + color.color_code }
+                            },
+                            [_vm._v(_vm._s(color.title))]
+                          )
+                        ])
+                      }),
+                      0
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-6" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("div", { staticClass: "form-group mt-3" }, [
+                    _c("h4", [_vm._v("Select Size")]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "c-size-swatch" },
+                      _vm._l(_vm.productDetails.sizes, function(size) {
+                        return _c("div", { key: size.id }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.productSize,
+                                expression: "productSize"
+                              }
+                            ],
+                            attrs: {
+                              type: "radio",
+                              name: "size",
+                              id: "size-" + size.title,
+                              hidden: ""
+                            },
+                            domProps: {
+                              value: size.id,
+                              checked: _vm._q(_vm.productSize, size.id)
+                            },
+                            on: {
+                              change: function($event) {
+                                _vm.productSize = size.id
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "c-size-swatch__item",
+                              attrs: { for: "size-" + size.title }
+                            },
+                            [_vm._v(_vm._s(size.title))]
+                          )
+                        ])
+                      }),
+                      0
+                    )
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _vm.selectedProduct
+              ? _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-6" }, [
+                    _c("img", {
+                      attrs: {
+                        width: "100%",
+                        src:
+                          "/images/products/variant/resized/" +
+                          _vm.selectedProduct.image,
+                        alt: _vm.selectedProduct.size.title
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-6" }, [
+                    _c("h3", { staticClass: "text-danger mb-3" }, [
+                      _c("b", [
+                        _vm._v(_vm._s(_vm.selectedProduct.price) + " BDT")
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "atc",
+                        class: {
+                          loading: _vm.buttonLoader == _vm.selectedProduct.id
                         },
-                        domProps: {
-                          value: color.id,
-                          checked: _vm._q(_vm.productColor, color.id)
+                        attrs: {
+                          disabled:
+                            !_vm.selectedProduct ||
+                            _vm.selectedProduct.stock < 1,
+                          type: "submit"
                         },
                         on: {
-                          change: function($event) {
-                            _vm.productColor = color.id
+                          click: function($event) {
+                            return _vm.addToCart(
+                              _vm.productDetails,
+                              _vm.selectedProduct
+                            )
                           }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          staticClass: "c-color-swatch__item",
-                          style: { background: color.color_code },
-                          attrs: { for: "color-" + color.color_code }
-                        },
-                        [_vm._v(_vm._s(color.title))]
-                      )
-                    ])
-                  }),
-                  0
-                )
+                      },
+                      [
+                        _c("i", { staticClass: "icon-shopping-basket" }),
+                        _vm._v(" Add To Cart\n            ")
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm.selectedProduct.stock < 1
+                      ? _c("p", { staticClass: "alert alert-danger mt-3" }, [
+                          _vm._v("out of stock")
+                        ])
+                      : _vm._e()
+                  ])
+                ])
+              : _vm._e()
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "form-group" },
+        [
+          Object.keys(this.userData).length > 0
+            ? _c("div", [
+                _c("p", { staticClass: "alert alert-success" }, [
+                  _vm._v('\n            Thank you mr "'),
+                  _c("b", [_vm._v(_vm._s(_vm.userData.name))]),
+                  _vm._v(
+                    '".you are now logged in & you can now order product\n          '
+                  )
+                ]),
+                _vm._v(" "),
+                _c("h4", [_vm._v("Login details for future login")]),
+                _vm._v(" "),
+                _c("table", { staticClass: "table table-bordered" }, [
+                  _c("tr", [
+                    _c("td", [_vm._v("Email:")]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v(_vm._s(_vm.userData.email))])
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(0)
+                ])
               ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.RegisterMode
+            ? _c("register-component", {
+                on: {
+                  userResponse: _vm.userResponse,
+                  moveloginMode: _vm.moveloginMode
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.LoginMode
+            ? _c("login-component", {
+                on: {
+                  userDataFromServer: _vm.userDataFromServer,
+                  moveRegisterMode: _vm.moveRegisterMode
+                }
+              })
+            : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "card product-meta mb-0" }, [
+        _c("div", { staticClass: "card-body" }, [
+          _c("span", { staticClass: "sku_wrapper" }, [
+            _vm._v("SKU: "),
+            _c("span", { staticClass: "sku" }, [
+              _vm._v(_vm._s(_vm.productDetails.sku))
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-6" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("div", { staticClass: "form-group mt-3" }, [
-                _c("h4", [_vm._v("Select Size")]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "c-size-swatch" },
-                  _vm._l(_vm.productDetails.sizes, function(size) {
-                    return _c("div", { key: size.id }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.productSize,
-                            expression: "productSize"
-                          }
-                        ],
-                        attrs: {
-                          type: "radio",
-                          name: "size",
-                          id: "size-" + size.title,
-                          hidden: ""
-                        },
-                        domProps: {
-                          value: size.id,
-                          checked: _vm._q(_vm.productSize, size.id)
-                        },
-                        on: {
-                          change: function($event) {
-                            _vm.productSize = size.id
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          staticClass: "c-size-swatch__item",
-                          attrs: { for: "size-" + size.title }
-                        },
-                        [_vm._v(_vm._s(size.title))]
-                      )
-                    ])
-                  }),
-                  0
+          _c(
+            "span",
+            { staticClass: "posted_in" },
+            [
+              _vm._v("Tags:\n            "),
+              _vm._l(_vm.productDetails.subcollections, function(sub, index) {
+                return _c(
+                  "a",
+                  { key: index, attrs: { href: "#", rel: "tag" } },
+                  [_vm._v(_vm._s(sub.title))]
                 )
-              ])
+              }),
+              _vm._v(",")
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c("span", { staticClass: "tagged_as" }, [
+            _vm._v("Collection: "),
+            _c("a", { attrs: { href: "#", rel: "tag" } }, [
+              _vm._v(_vm._s(_vm.collection.title))
             ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "form-group" },
-          [
-            Object.keys(this.userData).length > 0
-              ? _c("div", [
-                  _c("p", { staticClass: "alert alert-success" }, [
-                    _vm._v('Thank you mr "'),
-                    _c("b", [_vm._v(_vm._s(_vm.userData.name))]),
-                    _vm._v(
-                      '".you are now logged in & you can now order product'
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("h4", [_vm._v("Login details for future login")]),
-                  _vm._v(" "),
-                  _c("table", { staticClass: "table table-bordered" }, [
-                    _c("tr", [
-                      _c("td", [_vm._v("Email: ")]),
-                      _vm._v(" "),
-                      _c("th", [_vm._v(_vm._s(_vm.userData.email))])
-                    ]),
-                    _vm._v(" "),
-                    _vm._m(0)
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.RegisterMode
-              ? _c("register-component", {
-                  on: {
-                    userResponse: _vm.userResponse,
-                    moveloginMode: _vm.moveloginMode
-                  }
-                })
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.LoginMode
-              ? _c("login-component", {
-                  on: {
-                    userDataFromServer: _vm.userDataFromServer,
-                    moveRegisterMode: _vm.moveRegisterMode
-                  }
-                })
-              : _vm._e()
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "card product-meta mb-0" }, [
-          _c("div", { staticClass: "card-body" }, [
-            _c("span", { staticClass: "sku_wrapper" }, [
-              _vm._v("SKU: "),
-              _c("span", { staticClass: "sku" }, [
-                _vm._v(_vm._s(_vm.productDetails.sku))
-              ])
-            ]),
-            _vm._v(" "),
-            _c(
-              "span",
-              { staticClass: "posted_in" },
-              [
-                _vm._v("Tags: "),
-                _vm._l(_vm.productDetails.subcollections, function(sub, index) {
-                  return _c(
-                    "a",
-                    { key: index, attrs: { href: "#", rel: "tag" } },
-                    [_vm._v(_vm._s(sub.title))]
-                  )
-                }),
-                _vm._v(",")
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _c("span", { staticClass: "tagged_as" }, [
-              _vm._v("Collection: "),
-              _c("a", { attrs: { href: "#", rel: "tag" } }, [
-                _vm._v(_vm._s(_vm.collection.title))
-              ])
-            ]),
-            _vm._v(" "),
-            _c("span", { staticClass: "sku_wrapper" }, [
-              _vm._v("Description: "),
-              _c("span", [_vm._v(_vm._s(_vm.productDetails.description))])
-            ])
+          ]),
+          _vm._v(" "),
+          _c("span", { staticClass: "sku_wrapper" }, [
+            _vm._v("Description: "),
+            _c("span", [_vm._v(_vm._s(_vm.productDetails.description))])
           ])
         ])
-      ],
-      2
-    )
+      ])
+    ])
   ])
 }
 var staticRenderFns = [
